@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --passWithNoTests",
+    "test:watch": "yarn test -- --watch",
+    "test:staged": "yarn test -- --findRelatedTests",
+    "test:ci": "yarn test -- --coverage"
+
   },
   "repository": "git@github.com:theago-ls/clean-react.git",
   "author": "Thiago Lourenço <thiagosup1@gmail.com>",
