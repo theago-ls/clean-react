@@ -7,12 +7,12 @@
     "test:watch": "yarn test -- --watch",
     "test:staged": "yarn test -- --findRelatedTests",
     "test:ci": "yarn test -- --coverage"
-
   },
   "repository": "git@github.com:theago-ls/clean-react.git",
   "author": "Thiago Lourenço <thiagosup1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/faker": "^5.1.4",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.9",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
@@ -22,6 +22,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
+    "faker": "^5.1.0",
     "git-commit-msg-linter": "^3.0.0",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
