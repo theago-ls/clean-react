@@ -1,5 +1,5 @@
-import { mockAuthenticaction } from './../../../domain/test/mock-authentication'
-import { HttpPostClientSpy } from '../../test/mock-http-client'
+import { mockAuthenticaction } from '@/domain/test/mock-authentication'
+import { HttpPostClientSpy } from '@/data/test/mock-http-client'
 import { RemoteAuthentication } from './remote-authentication'
 import faker from 'faker'
 
