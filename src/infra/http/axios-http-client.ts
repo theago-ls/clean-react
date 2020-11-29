@@ -1,5 +1,4 @@
-import { HttpResponse } from '@/data/protocols/http'
-import { HttpPostClient, HttpPostParams } from '@/data/protocols/http/http-post-client'
+import { HttpResponse, HttpPostClient, HttpPostParams } from '@/data/protocols/http'
 import axios from 'axios'
 
 export class AxiosHttpClient implements HttpPostClient<any, any> {
