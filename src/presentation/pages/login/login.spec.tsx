@@ -8,5 +8,7 @@ describe('Login page', () => {
     render(<Login />)
     expect(screen.queryByTestId('spinner')).not.toBeInTheDocument()
     expect(screen.getByTestId('submit')).toBeDisabled()
+    expect(screen.getByTestId('email').title).toBe('Campo obrigatório')
+    expect(screen.getByTestId('password').title).toBe('Campo obrigatório')
   })
 })
