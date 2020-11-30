@@ -4,8 +4,9 @@ import { Login } from '@/presentation/pages'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('Login page', () => {
-  test('Should not render spinner and error on start', async () => {
+  test('Should start with initial state', async () => {
     render(<Login />)
-    expect(screen.queryByTestId('spinner')).toBeNull()
+    expect(screen.queryByTestId('spinner')).not.toBeInTheDocument()
+    expect(screen.getByTestId('submit')).toBeDisabled()
   })
 })
