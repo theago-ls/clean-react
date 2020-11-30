@@ -6,12 +6,14 @@ import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presenta
 type StateProps = {
   isLoading: boolean
   errorMessage: string
+  isFormInvalid: boolean
 }
 
 const Login: React.FC = () => {
   const [state] = useState<StateProps>({
     isLoading: false,
-    errorMessage: ''
+    errorMessage: '',
+    isFormInvalid: true
   })
 
   return (
