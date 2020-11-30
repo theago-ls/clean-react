@@ -3,17 +3,13 @@ import React, { useState } from 'react'
 import Styles from './login-styles.scss'
 import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
 
-type StateProps = {
-  isLoading: boolean
-  errorMessage: string
-  isFormInvalid: boolean
-}
-
 const Login: React.FC = () => {
-  const [state] = useState<StateProps>({
+  const [state] = useState({
     isLoading: false,
     errorMessage: '',
-    isFormInvalid: true
+    isFormInvalid: true,
+    emailError: 'Campo obrigatório',
+    passwordError: 'Campo obrigatório'
   })
 
   return (
