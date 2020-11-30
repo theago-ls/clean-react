@@ -13,6 +13,7 @@
   "author": "Thiago Lourenço <thiagosup1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@testing-library/react": "^11.2.2",
     "@types/axios": "^0.14.0",
     "@types/faker": "^5.1.2",
     "@types/jest": "^26.0.14",
