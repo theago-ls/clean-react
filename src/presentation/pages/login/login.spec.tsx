@@ -1,8 +1,9 @@
 import React from 'react'
-import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
 import { Login } from '@/presentation/pages'
-import '@testing-library/jest-dom/extend-expect'
 import { Validation } from '@/presentation/protocols/validation/validation'
+import '@testing-library/jest-dom/extend-expect'
+import faker from 'faker'
+import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
 
 type SutTypes = {
   sut: RenderResult
@@ -37,11 +38,21 @@ describe('Login page', () => {
     expect(sut.getByTestId('password').title).toBe('Campo obrigatório')
   })
 
-  test('Should call Validation with correct value', async () => {
+  test('Should call Validation with correct email', async () => {
     const { sut, validationSpy } = makeSut()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: 'any_email' } })
+    const email = faker.internet.email()
+    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
     expect(validationSpy.input).toEqual({
-      email: 'any_email'
+      email
+    })
+  })
+
+  test('Should call Validation with correct password', async () => {
+    const { sut, validationSpy } = makeSut()
+    const password = faker.internet.password()
+    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
+    expect(validationSpy.input).toEqual({
+      password
     })
   })
 })
