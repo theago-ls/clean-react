@@ -14,6 +14,20 @@ type SutParams = {
   validationError: string
 }
 
+const simulateValidSubmit = (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): void => {
+  populateEmailField(sut, email)
+  populatePasswordField(sut, password)
+  fireEvent.click(sut.getByTestId('submit'))
+}
+
+const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
+  fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
+}
+
+const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
+  fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
+}
+
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   const authenticationSpy = new AuthenticationSpy()
@@ -37,36 +51,27 @@ describe('Login page', () => {
 
   test('Should show email error if Validation fails', async () => {
     const { sut } = makeSut()
-    const email = faker.internet.email()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
+    populateEmailField(sut)
     // expect(sut.getByTestId('main-error').title).toBe(validationStub.errorMessage)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
     const { sut } = makeSut()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
+    populateEmailField(sut)
+    populatePasswordField(sut)
     expect(sut.queryByTestId('main-error')).toBe(null)
   })
 
   test('Should enable submit button if form is valid', async () => {
     const { sut } = makeSut()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
+    populateEmailField(sut)
+    populatePasswordField(sut)
     expect(sut.getByTestId('submit')).not.toBeDisabled()
   })
 
   test('Should show spinner on submit', async () => {
     const { sut } = makeSut()
-    const email = faker.internet.email()
-    const password = faker.internet.password()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
-    fireEvent.click(sut.getByTestId('submit'))
+    simulateValidSubmit(sut)
     expect(sut.getByTestId('spinner')).toBeInTheDocument()
   })
 
@@ -74,9 +79,7 @@ describe('Login page', () => {
     const { sut, authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
-    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
-    fireEvent.click(sut.getByTestId('submit'))
+    simulateValidSubmit(sut, email, password)
     expect(authenticationSpy.params).toEqual({
       email,
       password
