@@ -4,6 +4,7 @@ import Styles from './login-styles.scss'
 import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation/validation'
 import { Authentication } from '@/domain/usecases'
+import { Link } from 'react-router-dom'
 
 type Props = {
   validation: Validation
@@ -62,6 +63,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         <Input type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={handleChange}/>
         <Input type="password" name="password" placeholder="Digite sua senha" state={state} setState={setState} />
         <SubmitButton state={state} text="Entrar"/>
+        <Link data-testid="signup" to="/signup" className={Styles.link}>Criar conta</Link>
         <FormStatus state={state} />
       </form>
       <Footer />
