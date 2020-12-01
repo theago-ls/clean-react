@@ -45,4 +45,14 @@ describe('Login page', () => {
     fireEvent.input(sut.getByTestId('email'), { target: { value: password } })
     expect(sut.queryByTestId('main-error')).toBe(null)
   })
+
+  test('Should enable submit button if form is valid', async () => {
+    const { sut, validationStub } = makeSut()
+    validationStub.errorMessage = null
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
+    fireEvent.input(sut.getByTestId('email'), { target: { value: password } })
+    expect(sut.getByTestId('submit')).not.toBeDisabled()
+  })
 })
