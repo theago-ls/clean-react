@@ -44,7 +44,7 @@ describe('Login page', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('email'), { target: { value: password } })
+    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
     expect(sut.queryByTestId('main-error')).toBe(null)
   })
 
@@ -53,7 +53,17 @@ describe('Login page', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    fireEvent.input(sut.getByTestId('email'), { target: { value: password } })
+    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
     expect(sut.getByTestId('submit')).not.toBeDisabled()
+  })
+
+  test('Should show spinner on submit', async () => {
+    const { sut } = makeSut()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
+    fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
+    fireEvent.click(sut.getByTestId('submit'))
+    expect(sut.getByTestId('spinner')).toBeInTheDocument()
   })
 })
