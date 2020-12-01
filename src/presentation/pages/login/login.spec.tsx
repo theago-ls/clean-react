@@ -7,38 +7,40 @@ import { ValidationStub } from '@/presentation/test/validation'
 
 type SutTypes = {
   sut: RenderResult
-  validationStub: ValidationStub
 }
 
-const makeSut = (): SutTypes => {
+type SutParams = {
+  validationError: string
+}
+
+const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
-  validationStub.errorMessage = faker.random.words()
+  validationStub.errorMessage = params?.validationError
   const sut = render(<Login validation={validationStub} />)
   return {
-    sut,
-    validationStub
+    sut
   }
 }
 
 describe('Login page', () => {
   test('Should start with initial state', async () => {
-    const { sut, validationStub } = makeSut()
+    const validationError = faker.random.words()
+    const { sut } = makeSut({ validationError })
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
     expect(sut.getByTestId('submit')).toBeDisabled()
-    expect(sut.getByTestId('email').title).toBe(validationStub.errorMessage)
-    expect(sut.getByTestId('password').title).toBe(validationStub.errorMessage)
+    expect(sut.getByTestId('email').title).toBe(validationError)
+    expect(sut.getByTestId('password').title).toBe(validationError)
   })
 
   test('Should show email error if Validation fails', async () => {
-    const { sut, validationStub } = makeSut()
+    const { sut } = makeSut()
     const email = faker.internet.email()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
     // expect(sut.getByTestId('main-error').title).toBe(validationStub.errorMessage)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
-    const { sut, validationStub } = makeSut()
-    validationStub.errorMessage = null
+    const { sut } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
@@ -47,8 +49,7 @@ describe('Login page', () => {
   })
 
   test('Should enable submit button if form is valid', async () => {
-    const { sut, validationStub } = makeSut()
-    validationStub.errorMessage = null
+    const { sut } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
