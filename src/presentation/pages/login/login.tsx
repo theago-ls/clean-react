@@ -4,7 +4,7 @@ import Styles from './login-styles.scss'
 import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation/validation'
 import { Authentication } from '@/domain/usecases'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 type Props = {
   validation: Validation
@@ -22,6 +22,8 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
     passwordError: 'Campo obrigatório',
     mainError: ''
   })
+
+  const history = useHistory()
 
   const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
     setState(prevState => ({
@@ -42,6 +44,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         password: state.password
       })
       localStorage.setItem('accessToken', account.accessToken)
+      history.replace('/')
     } catch (error) {
       setState(prevState => ({ ...prevState, isLoading: false, mainError: error.message }))
     }
