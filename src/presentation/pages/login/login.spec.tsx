@@ -1,4 +1,6 @@
 import React from 'react'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 import '@testing-library/jest-dom/extend-expect'
 import faker from 'faker'
 import 'jest-localstorage-mock'
@@ -30,11 +32,17 @@ const populatePasswordField = (sut: RenderResult, password = faker.internet.pass
   fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
 }
 
+const history = createMemoryHistory()
+
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   const authenticationSpy = new AuthenticationSpy()
   validationStub.errorMessage = params?.validationError
-  const sut = render(<Login validation={validationStub} authentication={authenticationSpy} />)
+  const sut = render(
+    <Router history={history}>
+      <Login validation={validationStub} authentication={authenticationSpy} />
+    </Router>
+  )
   return {
     sut,
     authenticationSpy
@@ -122,5 +130,12 @@ describe('Login page', () => {
     simulateValidSubmit(sut)
     await waitFor(() => screen.getByTestId('form'))
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+  })
+
+  test('Should go to signup page', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    fireEvent.click(sut.getByTestId('signup'))
+    expect(history.length).toBe(2)
+    expect(history.location.pathname).toBe('/signup')
   })
 })
