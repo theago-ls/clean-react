@@ -18,10 +18,11 @@ type SutParams = {
   validationError: string
 }
 
-const simulateValidSubmit = (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): void => {
+const simulateValidSubmit = async (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
   populateEmailField(sut, email)
   populatePasswordField(sut, password)
-  fireEvent.click(sut.getByTestId('submit'))
+  fireEvent.submit(sut.getByTestId('form'))
+  await waitFor(() => sut.getByTestId('form'))
 }
 
 const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
@@ -94,10 +95,7 @@ describe('Login page', () => {
     const email = faker.internet.email()
     const password = faker.internet.password()
     simulateValidSubmit(sut, email, password)
-    expect(authenticationSpy.params).toEqual({
-      email,
-      password
-    })
+    expect(authenticationSpy.params).toEqual({ email, password })
   })
 
   test('Should call authentication only once', async () => {
@@ -110,8 +108,7 @@ describe('Login page', () => {
   test('Should not call Authentication if form is invalid', async () => {
     const validationError = faker.random.words()
     const { sut, authenticationSpy } = makeSut({ validationError })
-    populatePasswordField(sut)
-    fireEvent.submit(sut.getByTestId('form'))
+    await simulateValidSubmit(sut)
     expect(authenticationSpy.callsCount).toBe(0)
   })
 
@@ -119,16 +116,14 @@ describe('Login page', () => {
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
     jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
-    simulateValidSubmit(sut)
-    await waitFor(() => sut.getByTestId('error-wrap'))
+    await simulateValidSubmit(sut)
     expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
   test('Should add accessToken to localStorage on Authentication success', async () => {
     const { sut, authenticationSpy } = makeSut()
-    simulateValidSubmit(sut)
-    await waitFor(() => screen.getByTestId('form'))
+    await simulateValidSubmit(sut)
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
