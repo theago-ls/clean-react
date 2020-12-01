@@ -27,6 +27,11 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     }))
   }
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    setState(prevState => ({ ...prevState, isLoading: true }))
+  }
+
   useEffect(() => {
     setState(prevState => ({
       ...prevState,
@@ -38,7 +43,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
   return (
     <div className={Styles.loginWrap}>
       <LoginHeader />
-      <form data-testid="form" className={Styles.form}>
+      <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
         <h2>Login</h2>
         <Input type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={handleChange}/>
         <Input type="password" name="password" placeholder="Digite sua senha" state={state} setState={setState} />
