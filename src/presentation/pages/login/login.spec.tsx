@@ -7,32 +7,42 @@ import { ValidationStub } from '@/presentation/test/validation'
 
 type SutTypes = {
   sut: RenderResult
-  validationSpy: ValidationStub
+  validationStub: ValidationStub
 }
 
 const makeSut = (): SutTypes => {
-  const validationSpy = new ValidationStub()
-  validationSpy.errorMessage = faker.random.words()
-  const sut = render(<Login validation={validationSpy} />)
+  const validationStub = new ValidationStub()
+  validationStub.errorMessage = faker.random.words()
+  const sut = render(<Login validation={validationStub} />)
   return {
     sut,
-    validationSpy
+    validationStub
   }
 }
 
 describe('Login page', () => {
   test('Should start with initial state', async () => {
-    const { sut, validationSpy } = makeSut()
+    const { sut, validationStub } = makeSut()
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
     expect(sut.getByTestId('submit')).toBeDisabled()
-    expect(sut.getByTestId('email').title).toBe(validationSpy.errorMessage)
-    expect(sut.getByTestId('password').title).toBe(validationSpy.errorMessage)
+    expect(sut.getByTestId('email').title).toBe(validationStub.errorMessage)
+    expect(sut.getByTestId('password').title).toBe(validationStub.errorMessage)
   })
 
   test('Should show email error if Validation fails', async () => {
-    const { sut, validationSpy } = makeSut()
+    const { sut, validationStub } = makeSut()
     const email = faker.internet.email()
     fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-    // expect(sut.getByTestId('main-error').title).toBe(validationSpy.errorMessage)
+    // expect(sut.getByTestId('main-error').title).toBe(validationStub.errorMessage)
+  })
+
+  test('Should show valid state if Validation succeeds', async () => {
+    const { sut, validationStub } = makeSut()
+    validationStub.errorMessage = null
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
+    fireEvent.input(sut.getByTestId('email'), { target: { value: password } })
+    expect(sut.queryByTestId('main-error')).toBe(null)
   })
 })
