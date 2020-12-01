@@ -1,7 +1,8 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import faker from 'faker'
-import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
+import 'jest-localstorage-mock'
+import { render, RenderResult, fireEvent, waitFor, screen } from '@testing-library/react'
 import { Login } from '@/presentation/pages'
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
@@ -41,6 +42,10 @@ const makeSut = (params?: SutParams): SutTypes => {
 }
 
 describe('Login page', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   test('Should start with initial state', async () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
@@ -110,5 +115,12 @@ describe('Login page', () => {
     await waitFor(() => sut.getByTestId('error-wrap'))
     expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
+  })
+
+  test('Should add accessToken to localStorage on Authentication success', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    simulateValidSubmit(sut)
+    await waitFor(() => screen.getByTestId('form'))
+    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
   })
 })
