@@ -7,11 +7,11 @@ const makeSut = (minLenght: number): MinLengthValidation => new MinLengthValidat
 describe('MinLengthValidation', () => {
   test('should return error if value is invalid', () => {
     const sut = makeSut(5)
-    expect(sut.validate('123')).toEqual(new MinLengthError())
+    expect(sut.validate(faker.random.alphaNumeric(3))).toEqual(new MinLengthError())
   })
 
   test('should return falsy if value is valid', () => {
     const sut = makeSut(5)
-    expect(sut.validate('12345')).toBeFalsy()
+    expect(sut.validate(faker.random.alphaNumeric(5))).toBeFalsy()
   })
 })

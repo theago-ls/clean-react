@@ -9,7 +9,7 @@ export class EmailValidator {
   }
 
   constructor (value: string) {
-    const obj = validate({ from: value }, this.constraints)
+    const obj = value ? validate({ from: value }, this.constraints) : null
     this.result = obj ? 'E-mail inválido.' : ''
   }
 }
