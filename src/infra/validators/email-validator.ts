@@ -10,7 +10,6 @@ export class EmailValidator {
 
   constructor (value: string) {
     const obj = validate({ from: value }, this.constraints)
-    console.log(obj)
     this.result = obj ? 'E-mail inválido.' : ''
   }
 }
