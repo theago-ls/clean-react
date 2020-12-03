@@ -121,6 +121,15 @@ describe('Login page', () => {
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
+  test('Should show error if SaveAccessToken fails', async () => {
+    const { sut, saveAccessTokenMock } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error))
+    await simulateValidSubmit(sut)
+    expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
+    expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
+  })
+
   test('Should call  SaveAccessToken on Authentication success', async () => {
     const { sut, authenticationSpy, saveAccessTokenMock } = makeSut()
     await simulateValidSubmit(sut)
