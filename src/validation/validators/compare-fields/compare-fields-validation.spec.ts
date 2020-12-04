@@ -7,7 +7,12 @@ const makeSut = (valueToCompare: string): CompareFieldsValidation => new Compare
 describe('CompareFieldsValidation', () => {
   test('should return error if compare is invalid', () => {
     const sut = makeSut(faker.random.word())
-    const error = sut.validate(faker.random.word())
-    expect(sut.validate('')).toEqual(new InvalidFieldError())
+    expect(sut.validate(faker.random.word())).toEqual(new InvalidFieldError())
+  })
+
+  test('should return falsy if compare is valid', () => {
+    const value = faker.random.word()
+    const sut = makeSut(value)
+    expect(sut.validate(value)).toBeFalsy()
   })
 })
