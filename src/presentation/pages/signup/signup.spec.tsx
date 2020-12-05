@@ -4,9 +4,9 @@ import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react
 import '@testing-library/jest-dom/extend-expect'
 
 import Signup from './signup'
-import { populateField, ValidationStub } from '@/presentation/test'
+import { populateField, ValidationStub, AddAccountSpy } from '@/presentation/test'
+import { InvalidCredentialsError } from '@/domain/errors'
 import faker from 'faker'
-import { AddAccountSpy } from '@/presentation/test/mock-add-account'
 
 type SutTypes = {
   sut: RenderResult
@@ -128,5 +128,14 @@ describe('SignUp', () => {
     const { sut, addAccountSpy } = makeSut({ validationError })
     await simulateValidSubmit(sut)
     expect(addAccountSpy.callsCount).toBe(0)
+  })
+
+  test('Should show error if AddAccount fails', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
+    await simulateValidSubmit(sut)
+    expect((await sut.findByTestId('main-error')).textContent).toBe(error.message)
+    expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 })
