@@ -6,9 +6,11 @@ import '@testing-library/jest-dom/extend-expect'
 import Signup from './signup'
 import { populateField, ValidationStub } from '@/presentation/test'
 import faker from 'faker'
+import { AddAccountSpy } from '@/presentation/test/mock-add-account'
 
 type SutTypes = {
   sut: RenderResult
+  addAccountSpy: AddAccountSpy
 }
 
 type SutParams = {
@@ -18,13 +20,16 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
+  const addAccountSpy = new AddAccountSpy()
   const sut = render(
     <Signup
       validation={validationStub}
+      addAccount={addAccountSpy}
     />
   )
   return {
-    sut
+    sut,
+    addAccountSpy
   }
 }
 
@@ -99,5 +104,15 @@ describe('SignUp', () => {
     const { sut } = makeSut()
     simulateValidSubmit(sut)
     expect(sut.getByTestId('spinner')).toBeInTheDocument()
+  })
+
+  test('Should call AddAccount with correct values', async () => {
+    const { sut, addAccountSpy } = makeSut()
+    const name = faker.name.findName()
+    const email = faker.internet.email()
+    const password = faker.internet.password()
+    const passwordConfirmation = password
+    simulateValidSubmit(sut, name, email, password)
+    expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password })
   })
 })
