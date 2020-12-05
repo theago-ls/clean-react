@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { fireEvent, render, RenderResult } from '@testing-library/react'
+import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
 import Signup from './signup'
@@ -26,6 +26,15 @@ const makeSut = (params?: SutParams): SutTypes => {
   return {
     sut
   }
+}
+
+const simulateValidSubmit = async (sut: RenderResult, name = faker.name.findName(), email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
+  populateField(sut, 'name', name)
+  populateField(sut, 'email', email)
+  populateField(sut, 'password', password)
+  populateField(sut, 'passwordConfirmation', password)
+  fireEvent.submit(sut.getByTestId('form'))
+  await waitFor(() => sut.getByTestId('form'))
 }
 
 describe('SignUp', () => {
@@ -84,5 +93,11 @@ describe('SignUp', () => {
     populateField(sut, 'password')
     populateField(sut, 'passwordConfirmation')
     expect(sut.getByTestId('submit')).not.toBeDisabled()
+  })
+
+  test('Should show spinner on submit', async () => {
+    const { sut } = makeSut()
+    simulateValidSubmit(sut)
+    expect(sut.getByTestId('spinner')).toBeInTheDocument()
   })
 })
