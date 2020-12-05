@@ -76,4 +76,13 @@ describe('SignUp', () => {
     populateField(sut, 'passwordConfirmation')
     expect(sut.queryByTestId('main-error')).toBe(null)
   })
+
+  test('Should enable submit button if form is valid', async () => {
+    const { sut } = makeSut()
+    populateField(sut, 'name')
+    populateField(sut, 'email')
+    populateField(sut, 'password')
+    populateField(sut, 'passwordConfirmation')
+    expect(sut.getByTestId('submit')).not.toBeDisabled()
+  })
 })
