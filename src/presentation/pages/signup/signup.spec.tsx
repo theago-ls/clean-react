@@ -165,4 +165,11 @@ describe('SignUp', () => {
     expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
+
+  test('Should go to signup page', async () => {
+    const { sut } = makeSut()
+    fireEvent.click(sut.getByTestId('login'))
+    expect(history.length).toBe(2)
+    expect(history.location.pathname).toBe('/login')
+  })
 })
