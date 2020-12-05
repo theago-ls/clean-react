@@ -166,10 +166,10 @@ describe('SignUp', () => {
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
-  test('Should go to signup page', async () => {
+  test('Should go to login page', async () => {
     const { sut } = makeSut()
-    fireEvent.click(sut.getByTestId('login'))
-    expect(history.length).toBe(2)
+    fireEvent.click(sut.getByTestId('login-link'))
+    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/login')
   })
 })

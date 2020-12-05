@@ -68,7 +68,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
         <Input type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={handleChange}/>
         <Input type="password" name="password" placeholder="Digite sua senha" state={state} setState={setState} />
         <SubmitButton state={state} text="Entrar"/>
-        <Link data-testid="signup" to="/signup" className={Styles.link}>Criar conta</Link>
+        <Link data-testid="signup-link" replace to="/signup" className={Styles.link}>Criar conta</Link>
         <FormStatus state={state} />
       </form>
       <Footer />

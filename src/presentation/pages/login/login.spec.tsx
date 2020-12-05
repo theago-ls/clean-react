@@ -133,8 +133,8 @@ describe('Login page', () => {
 
   test('Should go to signup page', async () => {
     const { sut, authenticationSpy } = makeSut()
-    fireEvent.click(sut.getByTestId('signup'))
-    expect(history.length).toBe(2)
+    fireEvent.click(sut.getByTestId('signup-link'))
+    expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/signup')
   })
 })
