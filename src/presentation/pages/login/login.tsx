@@ -16,8 +16,8 @@ type Props = {
 const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
-    errorMessage: '',
     isFormInvalid: true,
+    errorMessage: '',
     email: '',
     password: '',
     emailError: 'Campo obrigatório',
@@ -37,7 +37,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     try {
-      if (state.isLoading || state.emailError || state.passwordError) {
+      if (state.isLoading || state.isFormInvalid) {
         return
       }
       setState(prevState => ({ ...prevState, isLoading: true }))
@@ -53,10 +53,14 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
   }
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email)
+    const passwordError = validation.validate('password', state.password)
+
     setState(prevState => ({
       ...prevState,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     }))
   }, [state.email, state.password])
 
