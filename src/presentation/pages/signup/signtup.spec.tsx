@@ -67,4 +67,13 @@ describe('SignUp', () => {
     populateField(sut, 'passwordConfirmation')
     expect(sut.getByTestId('passwordConfirmation').title).toBe(validationError)
   })
+
+  test('Should show valid state if Validation succeeds', async () => {
+    const { sut } = makeSut()
+    populateField(sut, 'name')
+    populateField(sut, 'email')
+    populateField(sut, 'password')
+    populateField(sut, 'passwordConfirmation')
+    expect(sut.queryByTestId('main-error')).toBe(null)
+  })
 })
