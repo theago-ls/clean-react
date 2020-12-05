@@ -35,7 +35,7 @@ describe('SignUp', () => {
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
     expect(sut.getByTestId('submit')).toBeDisabled()
     expect(sut.getByTestId('name').title).toBe(validationError)
-    expect(sut.getByTestId('email').title).toBe('Campo obrigatório')
+    expect(sut.getByTestId('email').title).toBe(validationError)
     expect(sut.getByTestId('password').title).toBe('Campo obrigatório')
     expect(sut.getByTestId('passwordConfirmation').title).toBe('Campo obrigatório')
   })
@@ -45,5 +45,12 @@ describe('SignUp', () => {
     const { sut } = makeSut({ validationError })
     populateField(sut, 'name')
     expect(sut.getByTestId('name').title).toBe(validationError)
+  })
+
+  test('Should show email error if Validation fails', async () => {
+    const validationError = faker.random.words()
+    const { sut } = makeSut({ validationError })
+    populateField(sut, 'email')
+    expect(sut.getByTestId('email').title).toBe(validationError)
   })
 })
