@@ -22,6 +22,11 @@ const Signup: React.FC<Props> = ({ validation }: Props) => {
     mainError: ''
   })
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault()
+    setState(prevState => ({ ...prevState, isLoading: true }))
+  }
+
   useEffect(() => {
     setState(prevState => ({
       ...prevState,
@@ -35,7 +40,7 @@ const Signup: React.FC<Props> = ({ validation }: Props) => {
   return (
     <div className={Styles.signup}>
       <LoginHeader />
-      <form className={Styles.form} onSubmit={() => {}}>
+      <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
         <h2>Criar conta</h2>
         <Input data-testid="name" type="text" name="name" placeholder="Digite seu nome" state={state} setState={setState} onChange={() => {}}/>
         <Input data-testid="email" type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={() => {}}/>
