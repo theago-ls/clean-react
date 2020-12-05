@@ -73,7 +73,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
         <Input data-testid="email" type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={() => {}}/>
         <Input data-testid="password" type="password" name="password" placeholder="Digite sua senha" state={state} setState={setState} />
         <Input data-testid="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="Confirme a sua senha" state={state} setState={setState} />
-        <SubmitButton data-testid="submit" state={state} text="Entrar"/>
+        <SubmitButton data-testid="submit" state={state} text="Cadastrar"/>
         <Link data-testid="login-link" replace to='/login' className={Styles.link}>Logar em uma conta existente</Link>
         <FormStatus state={state} />
       </form>
