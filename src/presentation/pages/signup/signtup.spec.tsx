@@ -4,7 +4,7 @@ import { fireEvent, render, RenderResult } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 
 import Signup from './signup'
-import { ValidationStub } from '@/presentation/test'
+import { populateField, ValidationStub } from '@/presentation/test'
 import faker from 'faker'
 
 type SutTypes = {
@@ -13,10 +13,6 @@ type SutTypes = {
 
 type SutParams = {
   validationError: string
-}
-
-const populateField = (sut: RenderResult, fieldName: string, fieldValue = faker.random.word()): void => {
-  fireEvent.input(sut.getByTestId(fieldName), { target: { value: fieldValue } })
 }
 
 const makeSut = (params?: SutParams): SutTypes => {

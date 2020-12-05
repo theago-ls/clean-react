@@ -3,9 +3,9 @@ import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 import '@testing-library/jest-dom/extend-expect'
 import faker from 'faker'
-import { render, RenderResult, fireEvent, waitFor, screen } from '@testing-library/react'
+import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
 import { Login } from '@/presentation/pages'
-import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock, populateField } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
@@ -19,18 +19,10 @@ type SutParams = {
 }
 
 const simulateValidSubmit = async (sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()): Promise<void> => {
-  populateEmailField(sut, email)
-  populatePasswordField(sut, password)
+  populateField(sut, 'email', email)
+  populateField(sut, 'password', password)
   fireEvent.submit(sut.getByTestId('form'))
   await waitFor(() => sut.getByTestId('form'))
-}
-
-const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
-  fireEvent.input(sut.getByTestId('email'), { target: { value: email } })
-}
-
-const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
-  fireEvent.input(sut.getByTestId('password'), { target: { value: password } })
 }
 
 const history = createMemoryHistory({ initialEntries: ['/login'] })
@@ -67,21 +59,21 @@ describe('Login page', () => {
   test('Should show email error if Validation fails', async () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
-    populateEmailField(sut)
+    populateField(sut, 'email')
     expect(sut.getByTestId('email').title).toBe(validationError)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
     const { sut } = makeSut()
-    populateEmailField(sut)
-    populatePasswordField(sut)
+    populateField(sut, 'email')
+    populateField(sut, 'password')
     expect(sut.queryByTestId('main-error')).toBe(null)
   })
 
   test('Should enable submit button if form is valid', async () => {
     const { sut } = makeSut()
-    populateEmailField(sut)
-    populatePasswordField(sut)
+    populateField(sut, 'email')
+    populateField(sut, 'password')
     expect(sut.getByTestId('submit')).not.toBeDisabled()
   })
 
