@@ -65,9 +65,10 @@ describe('Login page', () => {
   })
 
   test('Should show email error if Validation fails', async () => {
-    const { sut } = makeSut()
+    const validationError = faker.random.words()
+    const { sut } = makeSut({ validationError })
     populateEmailField(sut)
-    // expect(sut.getByTestId('main-error').title).toBe(validationStub.errorMessage)
+    expect(sut.getByTestId('email').title).toBe(validationError)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
