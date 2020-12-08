@@ -7,12 +7,14 @@
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
-    "test:ci": "yarn test --coverage"
+    "test:ci": "yarn test --coverage",
+    "test:cypress": "cypress open"
   },
   "repository": "git@github.com:theago-ls/clean-react.git",
   "author": "Thiago Lourenço <thiagosup1@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@cypress/webpack-preprocessor": "^5.5.0",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@types/axios": "^0.14.0",
@@ -25,8 +27,10 @@
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.1",
+    "cypress": "^6.1.0",
     "eslint": "^7.9.0",
     "eslint-config-standard-with-typescript": "^19.0.1",
+    "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
