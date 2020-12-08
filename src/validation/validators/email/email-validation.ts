@@ -5,8 +5,8 @@ import { FieldValidation } from '@/validation/protocols'
 export class EmailValidation implements FieldValidation {
   constructor (readonly field: string) {}
 
-  validate (value: string): Error {
-    const validator = new EmailValidator(value)
+  validate (input: object): Error {
+    const validator = new EmailValidator(input[this.field])
     return validator.result ? new EmailError(validator.result) : null
   }
 }

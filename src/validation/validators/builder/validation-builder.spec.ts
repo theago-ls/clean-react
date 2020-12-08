@@ -1,3 +1,4 @@
+import { CompareFieldsValidation } from './../compare-fields/compare-fields-validation'
 import { EmailValidation, MinLengthValidation, RequiredFieldValidation, ValidationBuilder as sut } from '@/validation/validators'
 import faker from 'faker'
 
@@ -19,6 +20,13 @@ describe('ValidationBuilder', () => {
     const minLength = faker.random.number(10)
     const validations = sut.field(fieldName).min(minLength).build()
     expect(validations).toEqual([new MinLengthValidation(fieldName, minLength)])
+  })
+
+  test('should return compare fields validation', () => {
+    const fieldName = faker.database.column()
+    const fieldToCompare = faker.database.column()
+    const validations = sut.field(fieldName).sameAs(fieldToCompare).build()
+    expect(validations).toEqual([new CompareFieldsValidation(fieldName, fieldToCompare)])
   })
 
   test('should return a list of validations', () => {
