@@ -58,8 +58,8 @@ describe('Login', () => {
         })
       }
     )
-    cy.getByTestId('email').focus().type('mango@gmail.com')
-    cy.getByTestId('password').focus().type('12345')
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit').click()
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
@@ -99,6 +99,43 @@ describe('Login', () => {
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
     cy.getByTestId('submit').click()
+    cy.getByTestId('error-wrap')
+      .getByTestId('spinner').should('not.exist')
+      .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
+    cy.url().should('eq', `${baseUrl}/login`)
+  })
+
+  // it('should prevent multiple submits', () => {
+  //   cy.intercept(
+  //     '/login',
+  //     (req) => {
+  //       req.reply(200, {
+  //         error: {
+  //           invalidProperty: faker.random.words()
+  //         }
+  //       })
+  //     }
+  //   ).as('request')
+  //   cy.getByTestId('email').focus().type(faker.internet.email())
+  //   cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+  //   cy.getByTestId('submit').dblclick()
+  //   cy.wait('@request')
+  //   cy.get('@request.all').should('have.length', 1)
+  // })
+
+  it('should submit if users type enter on input', () => {
+    cy.intercept(
+      '/login',
+      (req) => {
+        req.reply(200, {
+          error: {
+            invalidProperty: faker.random.words()
+          }
+        })
+      }
+    )
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
     cy.getByTestId('error-wrap')
       .getByTestId('spinner').should('not.exist')
       .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
