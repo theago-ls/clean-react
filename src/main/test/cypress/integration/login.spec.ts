@@ -84,4 +84,24 @@ describe('Login', () => {
       .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
     cy.url().should('eq', `${baseUrl}/login`)
   })
+
+  it('should show UnexpectedError if invalid data is returned', () => {
+    cy.intercept(
+      '/login',
+      (req) => {
+        req.reply(200, {
+          error: {
+            invalidProperty: faker.random.words()
+          }
+        })
+      }
+    )
+    cy.getByTestId('email').focus().type(faker.internet.email())
+    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+    cy.getByTestId('submit').click()
+    cy.getByTestId('error-wrap')
+      .getByTestId('spinner').should('not.exist')
+      .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
+    cy.url().should('eq', `${baseUrl}/login`)
+  })
 })
