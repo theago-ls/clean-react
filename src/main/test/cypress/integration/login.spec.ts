@@ -104,7 +104,6 @@ describe('Login', () => {
       .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
     cy.url().should('eq', `${baseUrl}/login`)
   })
-
   // it('should prevent multiple submits', () => {
   //   cy.intercept(
   //     '/login',
