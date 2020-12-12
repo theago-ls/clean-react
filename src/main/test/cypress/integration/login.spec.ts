@@ -141,4 +141,9 @@ describe('Login', () => {
       .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
     cy.url().should('eq', `${baseUrl}/login`)
   })
+
+  it('should not call submit if form is invalid', () => {
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+    cy.url().should('eq', `${baseUrl}/login`)
+  })
 })
