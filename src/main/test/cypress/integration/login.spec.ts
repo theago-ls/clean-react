@@ -1,23 +1,29 @@
 import faker from 'faker'
+import { testInputStatus, testMainError, testUrl, testLocalStorageItem } from '../support/form-helper'
+import { mockInvalidCredentialsError, mockUnexpectedError, mockOk, mockInvalidProperty } from './login-mocks'
 
-const baseUrl: string = Cypress.config().baseUrl
+const simulateValidSubmit = (): void => {
+  cy.getByTestId('email').focus().type(faker.internet.email())
+  cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+  cy.getByTestId('submit').click()
+}
 
 describe('Login', () => {
   beforeEach(() => {
     cy.visit('login')
   })
   it('should load with correct initial state', () => {
-    cy.getByTestId('email').should('have.attr', 'title', 'Campo obrigatório')
-    cy.getByTestId('password').should('have.attr', 'title', 'Campo obrigatório')
+    testInputStatus('email', 'Campo obrigatório')
+    testInputStatus('password', 'Campo obrigatório')
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
   it('should show error state if form is invalid', () => {
     cy.getByTestId('email').focus().type(faker.random.word())
-    cy.getByTestId('email').should('have.attr', 'title', 'E-mail inválido.')
+    testInputStatus('email', 'E-mail inválido.')
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
-    cy.getByTestId('password').should('have.attr', 'title', 'Campo com número de caracteres abaixo do mínimo requerido.')
+    testInputStatus('password', 'Campo com número de caracteres abaixo do mínimo requerido.')
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
@@ -30,91 +36,34 @@ describe('Login', () => {
   })
 
   it('should show InvalidCredentialsError if invalid credentials are provided', () => {
-    cy.intercept(
-      '/login',
-      (req) => {
-        req.reply(401, {
-          error: {
-            message: faker.random.words()
-          }
-        })
-      }
-    )
-    cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-    cy.getByTestId('submit').click()
-    cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contains.text', 'Credenciais inválidas')
-    cy.url().should('eq', `${baseUrl}/login`)
+    mockInvalidCredentialsError()
+    simulateValidSubmit()
+    testMainError('Credenciais inválidas')
+    testUrl('/login')
   })
 
   it('should save accessToken if valid credentials are provided', () => {
-    cy.intercept(
-      '/login',
-      (req) => {
-        req.reply(200, {
-          accessToken: faker.random.uuid()
-        })
-      }
-    )
-    cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-    cy.getByTestId('submit').click()
-    cy.url().should('eq', `${baseUrl}/`)
-    cy.window().then(window => assert.isOk(window.localStorage.getItem('accessToken')))
+    mockOk()
+    simulateValidSubmit()
+    testUrl('/')
+    testLocalStorageItem('accessToken')
   })
 
   it('should show UnexpectedError on 400', () => {
-    cy.intercept(
-      '/login',
-      (req) => {
-        req.reply(400, {
-          error: {
-            message: faker.random.words()
-          }
-        })
-      }
-    )
-    cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-    cy.getByTestId('submit').click()
-    cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
-    cy.url().should('eq', `${baseUrl}/login`)
+    mockUnexpectedError()
+    simulateValidSubmit()
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
+    testUrl('/login')
   })
 
   it('should show UnexpectedError if invalid data is returned', () => {
-    cy.intercept(
-      '/login',
-      (req) => {
-        req.reply(200, {
-          error: {
-            invalidProperty: faker.random.words()
-          }
-        })
-      }
-    )
-    cy.getByTestId('email').focus().type(faker.internet.email())
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
-    cy.getByTestId('submit').click()
-    cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
-    cy.url().should('eq', `${baseUrl}/login`)
+    mockInvalidProperty()
+    simulateValidSubmit()
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
+    testUrl('/login')
   })
   // it('should prevent multiple submits', () => {
-  //   cy.intercept(
-  //     '/login',
-  //     (req) => {
-  //       req.reply(200, {
-  //         error: {
-  //           invalidProperty: faker.random.words()
-  //         }
-  //       })
-  //     }
-  //   ).as('request')
+  //   mockInvalidProperty()
   //   cy.getByTestId('email').focus().type(faker.internet.email())
   //   cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
   //   cy.getByTestId('submit').dblclick()
@@ -123,26 +72,15 @@ describe('Login', () => {
   // })
 
   it('should submit if users type enter on input', () => {
-    cy.intercept(
-      '/login',
-      (req) => {
-        req.reply(200, {
-          error: {
-            invalidProperty: faker.random.words()
-          }
-        })
-      }
-    )
+    mockInvalidProperty()
     cy.getByTestId('email').focus().type(faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
-    cy.getByTestId('error-wrap')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contains.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
-    cy.url().should('eq', `${baseUrl}/login`)
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
+    testUrl('/login')
   })
 
   it('should not call submit if form is invalid', () => {
     cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
-    cy.url().should('eq', `${baseUrl}/login`)
+    testUrl('/login')
   })
 })
