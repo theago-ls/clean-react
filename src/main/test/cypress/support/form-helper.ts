@@ -4,6 +4,10 @@ export const testInputStatus = (field: string, error: string): void => {
   cy.getByTestId(field).should('have.attr', 'title', error)
 }
 
+export const typeInput = (field: string, input: string): void => {
+  cy.getByTestId(field).focus().type(input)
+}
+
 export const testMainError = (error: string): void => {
   cy.getByTestId('error-wrap')
     .getByTestId('spinner').should('not.exist')

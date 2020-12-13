@@ -1,10 +1,10 @@
 import faker from 'faker'
-import { testInputStatus, testMainError, testUrl, testLocalStorageItem } from '../support/form-helper'
+import { testInputStatus, testMainError, testUrl, testLocalStorageItem, typeInput } from '../support/form-helper'
 import { mockInvalidCredentialsError, mockUnexpectedError, mockOk, mockInvalidProperty } from '../support/login-mocks'
 
 const simulateValidSubmit = (): void => {
-  cy.getByTestId('email').focus().type(faker.internet.email())
-  cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5))
+  typeInput('email', faker.internet.email())
+  typeInput('password', faker.random.alphaNumeric(5))
   cy.getByTestId('submit').click()
 }
 
@@ -20,9 +20,9 @@ describe('Login', () => {
   })
 
   it('should show error state if form is invalid', () => {
-    cy.getByTestId('email').focus().type(faker.random.word())
+    typeInput('email', faker.random.word())
     testInputStatus('email', 'E-mail inválido.')
-    cy.getByTestId('password').focus().type(faker.random.alphaNumeric(3))
+    typeInput('password', faker.random.alphaNumeric(3))
     testInputStatus('password', 'Campo com número de caracteres abaixo do mínimo requerido.')
     cy.getByTestId('submit').should('have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
@@ -73,7 +73,7 @@ describe('Login', () => {
 
   it('should submit if users type enter on input', () => {
     mockInvalidProperty()
-    cy.getByTestId('email').focus().type(faker.internet.email())
+    typeInput('email', faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/login')
