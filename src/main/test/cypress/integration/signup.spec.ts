@@ -1,5 +1,5 @@
 import { testInputStatus, testMainError, testUrl, typeInput } from './../support/form-helper'
-import { mockEmailInUseError, mockUnexpectedError } from './../support/signup-mocks'
+import { mockEmailInUseError, mockUnexpectedError, mockInvalidProperty } from './../support/signup-mocks'
 
 import faker from 'faker'
 
@@ -57,6 +57,13 @@ describe('Signup', () => {
 
   it('should show UnexpectedError on any error', () => {
     mockUnexpectedError()
+    simulateValidSubmit()
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
+    testUrl('/signup')
+  })
+
+  it('should show UnexpectedError if invalid data is returned', () => {
+    mockInvalidProperty()
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/signup')
