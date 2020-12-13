@@ -1,6 +1,16 @@
-import { testInputStatus, typeInput } from './../support/form-helper'
+import { testInputStatus, testMainError, testUrl, typeInput } from './../support/form-helper'
+import { mockEmailInUseError } from './../support/signup-mocks'
 
 import faker from 'faker'
+
+const simulateValidSubmit = (): void => {
+  typeInput('name', faker.random.alphaNumeric(5))
+  typeInput('email', faker.internet.email())
+  const password = faker.random.alphaNumeric(5)
+  typeInput('password', password)
+  typeInput('passwordConfirmation', password)
+  cy.getByTestId('submit').click()
+}
 
 describe('Signup', () => {
   beforeEach(() => {
@@ -29,12 +39,19 @@ describe('Signup', () => {
   })
 
   it('should show valid state if form is valid', () => {
-    typeInput('name', faker.name.findName())
+    typeInput('name', faker.random.alphaNumeric(5))
     typeInput('email', faker.internet.email())
     const password = faker.random.alphaNumeric(5)
     typeInput('password', password)
     typeInput('passwordConfirmation', password)
     cy.getByTestId('submit').should('not.have.attr', 'disabled')
     cy.getByTestId('error-wrap').should('not.have.descendants')
+  })
+
+  it('should show EmailInUseError if email already registered is provided', () => {
+    mockEmailInUseError()
+    simulateValidSubmit()
+    testMainError('E-mail já cadastrado anteriormente.')
+    testUrl('/signup')
   })
 })

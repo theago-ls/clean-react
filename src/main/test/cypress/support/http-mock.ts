@@ -26,6 +26,19 @@ export const mockUnexpectedError = (url: string): void => {
   ).as('request')
 }
 
+export const mockEmailInUseError = (url: string): void => {
+  cy.intercept(
+    url,
+    (req) => {
+      req.reply(403, {
+        error: {
+          message: faker.random.words()
+        }
+      })
+    }
+  ).as('request')
+}
+
 export const mockOk = (url: string, response: object): void => {
   cy.intercept(
     url,
