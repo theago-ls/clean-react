@@ -1,5 +1,5 @@
-import { testInputStatus, testMainError, testUrl, typeInput } from './../support/form-helper'
-import { mockEmailInUseError, mockUnexpectedError, mockInvalidProperty } from './../support/signup-mocks'
+import { testInputStatus, testMainError, testUrl, typeInput, testLocalStorageItem } from './../support/form-helper'
+import { mockEmailInUseError, mockUnexpectedError, mockInvalidProperty, mockOk } from './../support/signup-mocks'
 
 import faker from 'faker'
 
@@ -67,5 +67,12 @@ describe('Signup', () => {
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/signup')
+  })
+
+  it('should save accessToken if valid credentials are provided', () => {
+    mockOk()
+    simulateValidSubmit()
+    testUrl('/')
+    testLocalStorageItem('accessToken')
   })
 })
