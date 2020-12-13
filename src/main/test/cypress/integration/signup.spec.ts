@@ -87,4 +87,9 @@ describe('Signup', () => {
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/signup')
   })
+
+  it('should not call submit if form is invalid', () => {
+    cy.getByTestId('email').focus().type(faker.internet.email()).type('{enter}')
+    testUrl('/signup')
+  })
 })
