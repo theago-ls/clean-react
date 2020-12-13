@@ -1,5 +1,5 @@
 import { testInputStatus, testMainError, testUrl, typeInput } from './../support/form-helper'
-import { mockEmailInUseError } from './../support/signup-mocks'
+import { mockEmailInUseError, mockUnexpectedError } from './../support/signup-mocks'
 
 import faker from 'faker'
 
@@ -52,6 +52,13 @@ describe('Signup', () => {
     mockEmailInUseError()
     simulateValidSubmit()
     testMainError('E-mail já cadastrado anteriormente.')
+    testUrl('/signup')
+  })
+
+  it('should show UnexpectedError on any error', () => {
+    mockUnexpectedError()
+    simulateValidSubmit()
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/signup')
   })
 })
