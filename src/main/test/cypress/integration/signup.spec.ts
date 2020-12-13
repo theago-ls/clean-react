@@ -2,6 +2,7 @@ import { testInputStatus, testMainError, testUrl, typeInput, testLocalStorageIte
 import { mockEmailInUseError, mockUnexpectedError, mockInvalidProperty, mockOk } from './../support/signup-mocks'
 
 import faker from 'faker'
+import { type } from 'cypress/types/jquery'
 
 const simulateValidSubmit = (): void => {
   typeInput('name', faker.random.alphaNumeric(5))
@@ -74,5 +75,16 @@ describe('Signup', () => {
     simulateValidSubmit()
     testUrl('/')
     testLocalStorageItem('accessToken')
+  })
+
+  it('should submit if users type enter on input', () => {
+    mockInvalidProperty()
+    typeInput('name', faker.random.alphaNumeric(5))
+    typeInput('email', faker.internet.email())
+    const password = faker.random.alphaNumeric(5)
+    typeInput('password', password)
+    cy.getByTestId('passwordConfirmation').focus().type(password).type('{enter}')
+    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
+    testUrl('/signup')
   })
 })
