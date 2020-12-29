@@ -8,7 +8,7 @@ export class RemoteLoadSurveryList {
     this.httpGetClient = httpGetClient
   }
 
-  async loadAll (): Promise<void> {
+  async loadAll (): Promise<void > {
     await this.httpGetClient.get({ url: this.url })
   }
 }
