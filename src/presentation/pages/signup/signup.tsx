@@ -67,7 +67,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
   }, [state.name, state.email, state.password, state.passwordConfirmation])
 
   return (
-    <div className={Styles.signup}>
+    <div className={Styles.signupWrap}>
       <LoginHeader />
       <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
         <h2>Criar conta</h2>
