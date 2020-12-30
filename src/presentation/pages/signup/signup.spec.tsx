@@ -6,14 +6,14 @@ import { createMemoryHistory } from 'history'
 import '@testing-library/jest-dom/extend-expect'
 
 import Signup from './signup'
-import { populateField, ValidationStub, AddAccountSpy, SaveAccessTokenMock } from '@/presentation/test'
+import { populateField, ValidationStub, AddAccountSpy, UpdateCurrentAccountMock } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import faker from 'faker'
 
 type SutTypes = {
   sut: RenderResult
   addAccountSpy: AddAccountSpy
-  saveAccessTokenMock: SaveAccessTokenMock
+  updateCurrentAccountMock: UpdateCurrentAccountMock
 }
 
 type SutParams = {
@@ -26,20 +26,20 @@ const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
-  const saveAccessTokenMock = new SaveAccessTokenMock()
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock()
   const sut = render(
     <Router history={history}>
       <Signup
         validation={validationStub}
         addAccount={addAccountSpy}
-        saveAccessToken={saveAccessTokenMock}
+        updateCurrentAccount={updateCurrentAccountMock}
       />
     </Router>
   )
   return {
     sut,
     addAccountSpy,
-    saveAccessTokenMock
+    updateCurrentAccountMock
   }
 }
 
@@ -121,7 +121,6 @@ describe('SignUp', () => {
     const name = faker.name.findName()
     const email = faker.internet.email()
     const password = faker.internet.password()
-    const passwordConfirmation = password
     simulateValidSubmit(sut, name, email, password)
     expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password })
   })
@@ -149,18 +148,18 @@ describe('SignUp', () => {
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
-  test('Should call SaveAccessToken on AddAccount success', async () => {
-    const { sut, addAccountSpy, saveAccessTokenMock } = makeSut()
+  test('Should call UpdateCurrentAccount on AddAccount success', async () => {
+    const { sut, addAccountSpy, updateCurrentAccountMock } = makeSut()
     await simulateValidSubmit(sut)
-    expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken)
+    expect(updateCurrentAccountMock.account).toEqual(addAccountSpy.account)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
 
-  test('Should show error if SaveAccessToken fails', async () => {
-    const { sut, saveAccessTokenMock } = makeSut()
+  test('Should show error if UpdateCurrentAccount fails', async () => {
+    const { sut, updateCurrentAccountMock } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
+    jest.spyOn(updateCurrentAccountMock, 'save').mockRejectedValueOnce(error)
     await simulateValidSubmit(sut)
     expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()

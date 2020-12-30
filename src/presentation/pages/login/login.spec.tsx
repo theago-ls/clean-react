@@ -5,13 +5,13 @@ import '@testing-library/jest-dom/extend-expect'
 import faker from 'faker'
 import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react'
 import { Login } from '@/presentation/pages'
-import { ValidationStub, AuthenticationSpy, SaveAccessTokenMock, populateField } from '@/presentation/test'
+import { ValidationStub, AuthenticationSpy, UpdateCurrentAccountMock, populateField } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 
 type SutTypes = {
   sut: RenderResult
   authenticationSpy: AuthenticationSpy
-  saveAccessTokenMock: SaveAccessTokenMock
+  updateCurrentAccountMock: UpdateCurrentAccountMock
 }
 
 type SutParams = {
@@ -29,20 +29,20 @@ const history = createMemoryHistory({ initialEntries: ['/login'] })
 
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub()
-  const saveAccessTokenMock = new SaveAccessTokenMock()
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock()
   const authenticationSpy = new AuthenticationSpy()
   validationStub.errorMessage = params?.validationError
   const sut = render(
     <Router history={history}>
       <Login validation={validationStub} authentication={authenticationSpy}
-        saveAccessToken={saveAccessTokenMock}
+        updateCurrentAccount={updateCurrentAccountMock}
       />
     </Router>
   )
   return {
     sut,
     authenticationSpy,
-    saveAccessTokenMock
+    updateCurrentAccountMock
   }
 }
 
@@ -114,25 +114,25 @@ describe('Login page', () => {
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
-  test('Should show error if SaveAccessToken fails', async () => {
-    const { sut, saveAccessTokenMock } = makeSut()
+  test('Should show error if UpdateCurrentAccount fails', async () => {
+    const { sut, updateCurrentAccountMock } = makeSut()
     const error = new InvalidCredentialsError()
-    jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error))
+    jest.spyOn(updateCurrentAccountMock, 'save').mockReturnValueOnce(Promise.reject(error))
     await simulateValidSubmit(sut)
     expect(sut.getByTestId('main-error')).toHaveTextContent(error.message)
     expect(sut.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
-  test('Should call  SaveAccessToken on Authentication success', async () => {
-    const { sut, authenticationSpy, saveAccessTokenMock } = makeSut()
+  test('Should call  UpdateCurrentAccount on Authentication success', async () => {
+    const { sut, authenticationSpy, updateCurrentAccountMock } = makeSut()
     await simulateValidSubmit(sut)
-    expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken)
+    expect(updateCurrentAccountMock.account).toEqual(authenticationSpy.account)
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/')
   })
 
   test('Should go to signup page', async () => {
-    const { sut, authenticationSpy } = makeSut()
+    const { sut } = makeSut()
     fireEvent.click(sut.getByTestId('signup-link'))
     expect(history.length).toBe(1)
     expect(history.location.pathname).toBe('/signup')

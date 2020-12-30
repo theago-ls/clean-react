@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { SaveAccessToken } from '@/domain/usecases/save-acess-token'
+import { UpdateCurrentAccount } from '@/domain/usecases/update-current-account'
 import { Authentication } from '@/domain/usecases'
 import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation/validation'
@@ -10,10 +10,10 @@ import Styles from './login-styles.scss'
 type Props = {
   validation: Validation
   authentication: Authentication
-  saveAccessToken: SaveAccessToken
+  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccount }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     isFormInvalid: true,
@@ -45,7 +45,7 @@ const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }:
         email: state.email,
         password: state.password
       })
-      await saveAccessToken.save(account.accessToken)
+      await updateCurrentAccount.save(account)
       history.replace('/')
     } catch (error) {
       setState(prevState => ({ ...prevState, isLoading: false, mainError: error.message }))

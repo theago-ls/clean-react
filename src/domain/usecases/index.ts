@@ -1,3 +1,3 @@
 export * from './authentication'
-export * from './save-acess-token'
+export * from './update-current-account'
 export * from './add-account'

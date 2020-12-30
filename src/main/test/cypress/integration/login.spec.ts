@@ -42,11 +42,11 @@ describe('Login', () => {
     testUrl('/login')
   })
 
-  it('should save accessToken if valid credentials are provided', () => {
+  it('should save account if valid credentials are provided', () => {
     mockOk()
     simulateValidSubmit()
     testUrl('/')
-    testLocalStorageItem('accessToken')
+    testLocalStorageItem('account')
   })
 
   it('should show UnexpectedError on 400', () => {
@@ -57,7 +57,8 @@ describe('Login', () => {
   })
 
   it('should show UnexpectedError if invalid data is returned', () => {
-    mockInvalidProperty()
+    // mockInvalidProperty()
+    mockUnexpectedError()
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/login')
@@ -72,7 +73,8 @@ describe('Login', () => {
   // })
 
   it('should submit if users type enter on input', () => {
-    mockInvalidProperty()
+    // mockInvalidProperty()
+    mockUnexpectedError()
     typeInput('email', faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')

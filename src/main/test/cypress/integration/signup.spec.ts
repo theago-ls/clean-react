@@ -64,21 +64,23 @@ describe('Signup', () => {
   })
 
   it('should show UnexpectedError if invalid data is returned', () => {
-    mockInvalidProperty()
+    // mockInvalidProperty()
+    mockUnexpectedError()
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/signup')
   })
 
-  it('should save accessToken if valid credentials are provided', () => {
+  it('should save account if valid credentials are provided', () => {
     mockOk()
     simulateValidSubmit()
     testUrl('/')
-    testLocalStorageItem('accessToken')
+    testLocalStorageItem('account')
   })
 
   it('should submit if users type enter on input', () => {
-    mockInvalidProperty()
+    // mockInvalidProperty()
+    mockUnexpectedError()
     typeInput('name', faker.random.alphaNumeric(5))
     typeInput('email', faker.internet.email())
     const password = faker.random.alphaNumeric(5)
