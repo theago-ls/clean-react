@@ -21,6 +21,15 @@ const SurveyList: React.FC = () => {
             </div>
             <span className={Styles.contentFooter}>Ver resultado</span>
           </li>
+          <li>
+
+          </li>
+          <li>
+
+          </li>
+          <li>
+
+          </li>
         </ul>
       </div>
       <Footer />
