@@ -57,8 +57,7 @@ describe('Login', () => {
   })
 
   it('should show UnexpectedError if invalid data is returned', () => {
-    // mockInvalidProperty()
-    mockUnexpectedError()
+    mockInvalidProperty()
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
     testUrl('/login')
@@ -73,8 +72,7 @@ describe('Login', () => {
   // })
 
   it('should submit if users type enter on input', () => {
-    // mockInvalidProperty()
-    mockUnexpectedError()
+    mockInvalidProperty()
     typeInput('email', faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')

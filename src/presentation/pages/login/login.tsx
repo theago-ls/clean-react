@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
-import { UpdateCurrentAccount } from '@/domain/usecases/update-current-account'
+import { ApiContext } from '@/presentation/contexts'
 import { Authentication } from '@/domain/usecases'
 import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
 import { Validation } from '@/presentation/protocols/validation/validation'
@@ -10,10 +10,11 @@ import Styles from './login-styles.scss'
 type Props = {
   validation: Validation
   authentication: Authentication
-  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccount }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+  const { setCurrentAccount } = useContext(ApiContext)
+
   const [state, setState] = useState({
     isLoading: false,
     isFormInvalid: true,
@@ -45,7 +46,7 @@ const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccou
         email: state.email,
         password: state.password
       })
-      await updateCurrentAccount.save(account)
+      setCurrentAccount(account)
       history.replace('/')
     } catch (error) {
       setState(prevState => ({ ...prevState, isLoading: false, mainError: error.message }))
