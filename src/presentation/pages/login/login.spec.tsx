@@ -53,22 +53,22 @@ describe('Login page', () => {
     makeSut({ validationError })
     expect(screen.queryByTestId('spinner')).not.toBeInTheDocument()
     expect(screen.getByTestId('submit')).toBeDisabled()
-    expect(screen.getByTestId('email').title).toBe(validationError)
-    expect(screen.getByTestId('password').title).toBe(validationError)
+    expect(screen.getByTestId('email')).toHaveAttribute('title', validationError)
+    expect(screen.getByTestId('password')).toHaveAttribute('title', validationError)
   })
 
   test('Should show email error if Validation fails', async () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     populateField('email')
-    expect(screen.getByTestId('email').title).toBe(validationError)
+    expect(screen.getByTestId('email')).toHaveAttribute('title', validationError)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
     makeSut()
     populateField('email')
     populateField('password')
-    expect(screen.queryByTestId('main-error')).toBe(null)
+    expect(screen.queryByTestId('main-error')).not.toBeInTheDocument()
   })
 
   test('Should enable submit button if form is valid', async () => {

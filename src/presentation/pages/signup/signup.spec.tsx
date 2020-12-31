@@ -70,28 +70,28 @@ describe('SignUp', () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     populateField('name')
-    expect(screen.getByTestId('name').title).toBe(validationError)
+    expect(screen.getByTestId('name')).toHaveAttribute('title', validationError)
   })
 
   test('Should show email error if Validation fails', async () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     populateField('email')
-    expect(screen.getByTestId('email').title).toBe(validationError)
+    expect(screen.getByTestId('email')).toHaveAttribute('title', validationError)
   })
 
   test('Should show password error if Validation fails', async () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     populateField('password')
-    expect(screen.getByTestId('password').title).toBe(validationError)
+    expect(screen.getByTestId('password')).toHaveAttribute('title', validationError)
   })
 
   test('Should show passwordConfirmation error if Validation fails', async () => {
     const validationError = faker.random.words()
     makeSut({ validationError })
     populateField('passwordConfirmation')
-    expect(screen.getByTestId('passwordConfirmation').title).toBe(validationError)
+    expect(screen.getByTestId('passwordConfirmation')).toHaveAttribute('title', validationError)
   })
 
   test('Should show valid state if Validation succeeds', async () => {
@@ -100,7 +100,7 @@ describe('SignUp', () => {
     populateField('email')
     populateField('password')
     populateField('passwordConfirmation')
-    expect(screen.queryByTestId('main-error')).toBe(null)
+    expect(screen.queryByTestId('main-error')).not.toBeInTheDocument()
   })
 
   test('Should enable submit button if form is valid', async () => {
@@ -146,7 +146,7 @@ describe('SignUp', () => {
     const error = new InvalidCredentialsError()
     jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error)
     await simulateValidSubmit()
-    expect((await screen.findByTestId('main-error')).textContent).toBe(error.message)
+    expect(await screen.findByTestId('main-error')).toHaveTextContent(error.message)
     expect(screen.queryByTestId('spinner')).not.toBeInTheDocument()
   })
 
