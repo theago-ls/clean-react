@@ -1,7 +1,8 @@
+import { makeApiUrl } from '@/main/factories/http/api-url'
 import { LoadSurveyList } from '@/domain/usecases'
-import { makeApiUrl, makeAxiosHttpClient } from '@/main/factories/http'
+import { makeAuthorizeHttpGetClientDecorator } from '@/main/factories/decorators'
 import { RemoteLoadSurveryList } from '@/data/usecases/load-survey-list/remote-load-survey-list'
 
 export const makeRemoteLoadSurveyList = (): LoadSurveyList => {
-  return new RemoteLoadSurveryList(makeApiUrl('/surveys'), makeAxiosHttpClient())
+  return new RemoteLoadSurveryList(makeApiUrl('/surveys'), makeAuthorizeHttpGetClientDecorator())
 }
