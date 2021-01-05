@@ -1,7 +1,5 @@
-import { mockAccountModel } from './../../../domain/test/mock-account'
-import { HttpGetClientSpy } from '@/data/test'
-import { GetStorageSpy } from '@/data/test/mock-cache'
-import { mockGetRequest } from '@/data/test/mock-http'
+import { mockAccountModel } from '@/domain/test/mock-account'
+import { HttpGetClientSpy, mockGetRequest, GetStorageSpy } from '@/data/test'
 import { AuthorizeHttpGetClientDecorator } from '@/main/decorators'
 import faker from 'faker'
 
@@ -71,5 +69,11 @@ describe('AuthorizeHttpGetClientDecorator', () => {
       field,
       'x-access-token': getStorageSpy.value.accessToken
     })
+  })
+
+  test('should return the same result as HttpGetClient', async () => {
+    const { sut, httpGetClientSpy } = makeSut()
+    const httpResponse = await sut.get(mockGetRequest())
+    expect(httpResponse).toEqual(httpGetClientSpy.response)
   })
 })
