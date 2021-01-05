@@ -1,9 +1,9 @@
 import React from 'react'
 import { SurveyItemEmpty, SurveyItem } from '@/presentation/pages/survey-list/components'
-import { SurveyModel } from '@/domain/models'
+import { LoadSurveyList } from '@/domain/usecases'
 
 type Props = {
-  state: { error: string, surveys: SurveyModel[]}
+  state: { error: string, surveys: LoadSurveyList.Model[]}
 }
 
 const List: React.FC<Props> = ({ state }: Props) => {

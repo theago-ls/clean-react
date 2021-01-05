@@ -6,16 +6,17 @@ import { createMemoryHistory } from 'history'
 import '@testing-library/jest-dom/extend-expect'
 
 import Signup from './signup'
-import { populateField, ValidationStub, AddAccountSpy } from '@/presentation/test'
+import { populateField, ValidationStub } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { ApiContext } from '@/presentation/contexts'
 
 import faker from 'faker'
-import { AccountModel } from '@/domain/models'
+import { AddAccount } from '@/domain/usecases'
+import { AddAccountSpy } from '@/domain/test'
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy
-  setCurrentAccountMock: (account: AccountModel) => void
+  setCurrentAccountMock: (account: AddAccount.Model) => void
 }
 
 type SutParams = {
