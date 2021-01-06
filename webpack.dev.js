@@ -1,20 +1,10 @@
-const path = require('path')
 const { DefinePlugin } = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-module.exports = {
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const common = require('./webpack.common')
+const { merge } = require('webpack-merge')
+
+module.exports = merge(common, {
   mode: 'development',
-  entry: './src/main/index.tsx',
-  output: {
-    path: path.join(__dirname, 'public/js'),
-    publicPath: 'pubic/js',
-    filename: 'bundle.js'
-  },
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.scss'],
-    alias: {
-      '@': path.join(__dirname, 'src')
-    }
-  },
   module: {
     rules: [
       {
@@ -43,14 +33,12 @@ module.exports = {
     writeToDisk: true,
     historyApiFallback: true
   },
-  externals: {
-    react: 'React',
-    'react-dom': 'ReactDOM'
-  },
   plugins: [
-    new CleanWebpackPlugin(),
     new DefinePlugin({
       'process.env.API_URL': JSON.stringify('http://fordevs.herokuapp.com/api')
+    }),
+    new HtmlWebpackPlugin({
+      template: 'template.dev.html'
     })
   ]
-}
+})
