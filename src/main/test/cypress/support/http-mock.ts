@@ -1,6 +1,6 @@
 import faker from 'faker'
 
-export const mockInvalidCredentialsError = (url: string): void => {
+export const mockUnauthorizedError = (url: string): void => {
   cy.intercept(
     url,
     (req) => {
@@ -13,7 +13,7 @@ export const mockInvalidCredentialsError = (url: string): void => {
   ).as('request')
 }
 
-export const mockUnexpectedError = (url: string): void => {
+export const mockServerError = (url: string): void => {
   cy.intercept(
     url,
     (req) => {
@@ -26,7 +26,7 @@ export const mockUnexpectedError = (url: string): void => {
   ).as('request')
 }
 
-export const mockEmailInUseError = (url: string): void => {
+export const mockForbiddenError = (url: string): void => {
   cy.intercept(
     url,
     (req) => {

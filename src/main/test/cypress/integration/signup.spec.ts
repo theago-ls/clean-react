@@ -1,8 +1,8 @@
-import { testInputStatus, testMainError, testUrl, typeInput, testLocalStorageItem } from './../support/form-helper'
-import { mockEmailInUseError, mockUnexpectedError, mockInvalidProperty, mockOk } from './../support/signup-mocks'
+import { testInputStatus, testMainError, typeInput } from '../support/form-helpers'
+import { testUrl, testLocalStorageItem } from './../support/helpers'
+import { mockEmailInUseError, mockUnexpectedError, mockOk } from './../support/signup-mocks'
 
 import faker from 'faker'
-import { type } from 'cypress/types/jquery'
 
 const simulateValidSubmit = (): void => {
   typeInput('name', faker.random.alphaNumeric(5))
@@ -57,14 +57,6 @@ describe('Signup', () => {
   })
 
   it('should show UnexpectedError on any error', () => {
-    mockUnexpectedError()
-    simulateValidSubmit()
-    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
-    testUrl('/signup')
-  })
-
-  it('should show UnexpectedError if invalid data is returned', () => {
-    // mockInvalidProperty()
     mockUnexpectedError()
     simulateValidSubmit()
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')

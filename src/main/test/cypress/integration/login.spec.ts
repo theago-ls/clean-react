@@ -1,6 +1,7 @@
 import faker from 'faker'
-import { testInputStatus, testMainError, testUrl, testLocalStorageItem, typeInput } from '../support/form-helper'
-import { mockInvalidCredentialsError, mockUnexpectedError, mockOk, mockInvalidProperty } from '../support/login-mocks'
+import { testInputStatus, testMainError, typeInput } from './../support/form-helpers'
+import { testUrl, testLocalStorageItem } from './../support/helpers'
+import { mockInvalidCredentialsError, mockUnexpectedError, mockOk } from '../support/login-mocks'
 
 const simulateValidSubmit = (): void => {
   typeInput('email', faker.internet.email())
@@ -56,12 +57,6 @@ describe('Login', () => {
     testUrl('/login')
   })
 
-  it('should show UnexpectedError if invalid data is returned', () => {
-    mockInvalidProperty()
-    simulateValidSubmit()
-    testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
-    testUrl('/login')
-  })
   // it('should prevent multiple submits', () => {
   //   mockInvalidProperty()
   //   cy.getByTestId('email').focus().type(faker.internet.email())
@@ -72,7 +67,7 @@ describe('Login', () => {
   // })
 
   it('should submit if users type enter on input', () => {
-    mockInvalidProperty()
+    mockUnexpectedError()
     typeInput('email', faker.internet.email())
     cy.getByTestId('password').focus().type(faker.random.alphaNumeric(5)).type('{enter}')
     testMainError('Algo de errado aconteceu. Tente novamente mais tarde')
