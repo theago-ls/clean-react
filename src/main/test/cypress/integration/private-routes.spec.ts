@@ -1,4 +1,4 @@
-import { testUrl } from './../support/helpers'
+import { testUrl } from '../utils/helpers'
 
 describe('Private Routes', () => {
   it('should logout on empty token', () => {

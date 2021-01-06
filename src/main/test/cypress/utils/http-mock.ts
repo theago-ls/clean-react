@@ -39,11 +39,12 @@ export const mockForbiddenError = (url: string): void => {
   ).as('request')
 }
 
-export const mockOk = (url: string, response: object): void => {
+export const mockOk = (url: string, response: any): void => {
   cy.intercept(
     url,
-    (req) => {
-      req.reply(200, response)
+    {
+      fixture: response,
+      statusCode: 200
     }
   ).as('request')
 }

@@ -1,7 +1,12 @@
 import faker from 'faker'
-import { testInputStatus, testMainError, typeInput } from './../support/form-helpers'
-import { testUrl, testLocalStorageItem } from './../support/helpers'
-import { mockInvalidCredentialsError, mockUnexpectedError, mockOk } from '../support/login-mocks'
+import { testInputStatus, testMainError, typeInput } from '../utils/form-helpers'
+import { testUrl, testLocalStorageItem } from '../utils/helpers'
+import * as Http from '../utils/http-mock'
+
+const path = '/login'
+const mockInvalidCredentialsError = (): void => Http.mockUnauthorizedError(path)
+const mockUnexpectedError = (): void => Http.mockServerError(path)
+const mockSuccess = (): void => Http.mockOk(path, 'account')
 
 const simulateValidSubmit = (): void => {
   typeInput('email', faker.internet.email())
@@ -11,7 +16,7 @@ const simulateValidSubmit = (): void => {
 
 describe('Login', () => {
   beforeEach(() => {
-    cy.visit('login')
+    cy.visit('/login')
   })
   it('should load with correct initial state', () => {
     testInputStatus('email', 'Campo obrigatório')
@@ -44,7 +49,7 @@ describe('Login', () => {
   })
 
   it('should save account if valid credentials are provided', () => {
-    mockOk()
+    mockSuccess()
     simulateValidSubmit()
     testUrl('/')
     testLocalStorageItem('account')

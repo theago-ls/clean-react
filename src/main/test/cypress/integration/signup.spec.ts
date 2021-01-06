@@ -1,8 +1,12 @@
-import { testInputStatus, testMainError, typeInput } from '../support/form-helpers'
-import { testUrl, testLocalStorageItem } from './../support/helpers'
-import { mockEmailInUseError, mockUnexpectedError, mockOk } from './../support/signup-mocks'
-
+import { testInputStatus, testMainError, typeInput } from '../utils/form-helpers'
+import { testUrl, testLocalStorageItem } from '../utils/helpers'
+import * as Http from '../utils/http-mock'
 import faker from 'faker'
+
+const path = '/signup'
+const mockEmailInUseError = (): void => Http.mockForbiddenError(path)
+const mockUnexpectedError = (): void => Http.mockServerError(path)
+const mockSuccess = (): void => Http.mockOk(path, 'account')
 
 const simulateValidSubmit = (): void => {
   typeInput('name', faker.random.alphaNumeric(5))
@@ -64,7 +68,7 @@ describe('Signup', () => {
   })
 
   it('should save account if valid credentials are provided', () => {
-    mockOk()
+    mockSuccess()
     simulateValidSubmit()
     testUrl('/')
     testLocalStorageItem('account')
