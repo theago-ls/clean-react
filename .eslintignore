@@ -1,6 +1,8 @@
 node_modules
 .vscode
 coverage
+*.png
 dist
+public
 *.scss
 *.json
