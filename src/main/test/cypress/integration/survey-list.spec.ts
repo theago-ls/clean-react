@@ -53,7 +53,7 @@ describe('SurveyList', () => {
     cy.get('li:not(:empty)').should('have.length', 2)
     cy.get('li:nth-child(1)').then(li => {
       assert.equal(li.find('[data-testid="day"]').text(), '03')
-      assert.equal(li.find('[data-testid="month"]').text(), 'fev')
+      assert.equal(li.find('[data-testid="month"]').text(), '02')
       assert.equal(li.find('[data-testid="year"]').text(), '2018')
       assert.equal(li.find('[data-testid="question"]').text(), 'Question 1')
       cy.fixture('icons').then(icon => {
@@ -63,7 +63,7 @@ describe('SurveyList', () => {
 
     cy.get('li:nth-child(2)').then(li => {
       assert.equal(li.find('[data-testid="day"]').text(), '13')
-      assert.equal(li.find('[data-testid="month"]').text(), 'nov')
+      assert.equal(li.find('[data-testid="month"]').text(), '11')
       assert.equal(li.find('[data-testid="year"]').text(), '2019')
       assert.equal(li.find('[data-testid="question"]').text(), 'Question 2')
       cy.fixture('icons').then(icon => {

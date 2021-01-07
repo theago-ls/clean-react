@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react'
 import React from 'react'
 
 const makeSut = (survey = mockSurveyModel()): void => {
-  render(<SurveyItem survey={survey}/>)
+  render(<SurveyItem survey={survey} />)
 }
 
 describe('SurveyItem Component', () => {
@@ -17,7 +17,7 @@ describe('SurveyItem Component', () => {
     makeSut(survey)
     expect(screen.getByTestId('icon')).toHaveProperty('src', IconName.thumbUp)
     expect(screen.getByTestId('day')).toHaveTextContent('10')
-    expect(screen.getByTestId('month')).toHaveTextContent('jan')
+    expect(screen.getByTestId('month')).toHaveTextContent('01')
     expect(screen.getByTestId('year')).toHaveTextContent('2020')
     expect(screen.getByTestId('question')).toHaveTextContent(survey.question)
   })
@@ -30,7 +30,7 @@ describe('SurveyItem Component', () => {
     makeSut(survey)
     expect(screen.getByTestId('icon')).toHaveProperty('src', IconName.thumbDown)
     expect(screen.getByTestId('day')).toHaveTextContent('03')
-    expect(screen.getByTestId('month')).toHaveTextContent('fev')
+    expect(screen.getByTestId('month')).toHaveTextContent('02')
     expect(screen.getByTestId('year')).toHaveTextContent('2019')
   })
 })
