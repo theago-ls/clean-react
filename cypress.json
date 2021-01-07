@@ -4,5 +4,6 @@
   "supportFile": "src/main/test/cypress/support/index.js",
   "pluginsFile": "src/main/test/cypress/plugins/index.js",
   "integrationFolder": "src/main/test/cypress/integration",
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "video": false
 }
