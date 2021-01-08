@@ -12,7 +12,7 @@ export class RemoteSaveSurveyResult implements SaveSurveyResult {
   async save (params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Model> {
     const httpResponse = await this.httpClient.request({ url: this.url, method: 'put', body: params })
     switch (httpResponse.statusCode) {
-      case HttpStatusCode.ok: return null
+      case HttpStatusCode.ok: return httpResponse?.body ? { ...httpResponse.body, date: new Date(httpResponse.body.date) } : null
       case HttpStatusCode.forbidden: throw new AccessDeniedError()
       default: throw new UnexpectedError()
     }
