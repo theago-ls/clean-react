@@ -1,4 +1,4 @@
-import { LoadSurveyResult } from '@/domain/usecases'
+import { LoadSurveyResult, SaveSurveyResult } from '@/domain/usecases'
 import { Error, Footer, Header, Loading } from '@/presentation/components'
 import { useErrorHandler } from '@/presentation/hooks'
 import React, { useEffect, useState } from 'react'
@@ -7,9 +7,10 @@ import Styles from './survey-result-styles.scss'
 
 type Props = {
   loadSurveyResult: LoadSurveyResult
+  saveSurveyResult: SaveSurveyResult
 }
 
-const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
+const SurveyResult: React.FC<Props> = ({ loadSurveyResult, saveSurveyResult }: Props) => {
   const [state, setState] = useState({
     isLoading: false,
     error: '',
@@ -25,6 +26,11 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
     setState(prevState => ({ ...prevState, reload: !prevState.reload }))
   }
 
+  const handleAnswer = (answer: string): void => {
+    setState(prevState => ({ ...prevState, isLoading: true }))
+    saveSurveyResult.save({ answer }).then(surveyResult => setState(prevState => ({ ...prevState, surveyResult }))).catch(handleError)
+  }
+
   useEffect(() => {
     loadSurveyResult.load().then(surveyResult => setState(prevState => ({ ...prevState, surveyResult }))).catch(handleError)
   }, [state.reload])
@@ -33,7 +39,7 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
     <div className={Styles.surveyResultWrap}>
       <Header />
       <div data-testid="survey-result" className={Styles.contentWrap}>
-        {state.surveyResult && <Result result={state.surveyResult} />}
+        {state.surveyResult && <Result result={state.surveyResult} onAnswer={handleAnswer} />}
         {state.isLoading && <Loading />}
         {state.error && <Error error={state.error} reload={handleReload} />}
       </div>
