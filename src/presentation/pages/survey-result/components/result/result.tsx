@@ -1,5 +1,4 @@
 import React from 'react'
-import FlipMove from 'react-flip-move'
 import { useHistory } from 'react-router-dom'
 import { LoadSurveyResult } from '@/domain/usecases'
 import { Calendar } from '@/presentation/components'
@@ -21,11 +20,9 @@ const Result: React.FC<Props> = ({ result, onAnswer }: Props) => {
         <Calendar date={result.date} className={Styles.calendarWrap} />
         <h2 data-testid="question">{result.question}</h2>
       </hgroup>
-      <FlipMove data-testid="answers" className={Styles.answersList}>
-        <>
-          {result.answers?.map((answer) => <Answer key={answer.answer} answer={answer} onAnswer={onAnswer} />)}
-        </>
-      </FlipMove>
+      <ul data-testid="answers" className={Styles.answersList}>
+        {result.answers?.map((answer) => <Answer key={answer.answer} answer={answer} onAnswer={onAnswer} />)}
+      </ul>
       <button className={Styles.button} data-testid='back-button' onClick={goBack}>Voltar</button>
 
     </div >
