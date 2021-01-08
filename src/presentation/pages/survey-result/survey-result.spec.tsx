@@ -171,4 +171,38 @@ describe('SurveyResult Component', () => {
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined)
     expect(history.location.pathname).toBe('/login')
   })
+
+  test('should present SurveyResult data on success', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy()
+    const surveyResult = { ...mockSurveyResultModel(), date: new Date('2020-03-04T00:00:00') }
+    saveSurveyResultSpy.surveyResult = surveyResult
+    makeSut({ saveSurveyResultSpy })
+    await waitFor(() => screen.getByTestId('survey-result'))
+    const answersWrap = screen.queryAllByTestId('answer-wrap')
+    fireEvent.click(answersWrap[1])
+
+    await waitFor(() => screen.getByTestId('survey-result'))
+    expect(screen.getByTestId('day')).toHaveTextContent('04')
+    expect(screen.getByTestId('month')).toHaveTextContent('03')
+    expect(screen.getByTestId('year')).toHaveTextContent('2020')
+    expect(screen.getByTestId('question')).toHaveTextContent(surveyResult.question)
+    expect(screen.getByTestId('answers').childElementCount).toBe(2)
+
+    expect(answersWrap[0]).toHaveClass('active')
+    expect(answersWrap[1]).not.toHaveClass('active')
+
+    const images = screen.queryAllByTestId('image')
+    expect(images[0]).toHaveAttribute('src', surveyResult.answers[0].image)
+    expect(images[0]).toHaveAttribute('alt', surveyResult.answers[0].answer)
+    expect(images[1]).toBeFalsy()
+
+    const answers = screen.queryAllByTestId('answer')
+    expect(answers[0]).toHaveTextContent(surveyResult.answers[0].answer)
+    expect(answers[1]).toHaveTextContent(surveyResult.answers[1].answer)
+
+    const percents = screen.queryAllByTestId('percent')
+    expect(percents[0]).toHaveTextContent(`${(surveyResult.answers[0].percent).toFixed(2)}%`)
+    expect(percents[1]).toHaveTextContent(`${(surveyResult.answers[1].percent).toFixed(2)}%`)
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument()
+  })
 })
