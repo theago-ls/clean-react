@@ -205,4 +205,17 @@ describe('SurveyResult Component', () => {
     expect(percents[1]).toHaveTextContent(`${(surveyResult.answers[1].percent).toFixed(2)}%`)
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument()
   })
+
+  test('should prevent mutiple answers click', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy()
+    const surveyResult = { ...mockSurveyResultModel(), date: new Date('2020-03-04T00:00:00') }
+    saveSurveyResultSpy.surveyResult = surveyResult
+    makeSut({ saveSurveyResultSpy })
+    await waitFor(() => screen.getByTestId('survey-result'))
+    const answersWrap = screen.queryAllByTestId('answer-wrap')
+    fireEvent.click(answersWrap[1])
+    fireEvent.click(answersWrap[1])
+    await waitFor(() => screen.getByTestId('survey-result'))
+    expect(saveSurveyResultSpy.callsCount).toBe(1)
+  })
 })
