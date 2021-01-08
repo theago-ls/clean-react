@@ -10,41 +10,32 @@ type Props = {
 }
 
 const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
-  const [state] = useState({
+  const [state, setState] = useState({
     isLoading: false,
     error: '',
     surveyResult: null as LoadSurveyResult.Model
   })
 
   useEffect(() => {
-    loadSurveyResult.load().then().catch()
+    loadSurveyResult.load().then(surveyResult => setState(prevState => ({ ...prevState, surveyResult }))).catch()
   }, [])
 
   return (
     <div className={Styles.surveyResultWrap}>
       <Header />
       <div data-testid="survey-result" className={Styles.contentWrap}>
-        {false && <>
+        {state.surveyResult && <>
           <hgroup>
-            <Calendar date={new Date()} className={Styles.calendarWrap} />
-            <h2>Pergunta</h2>
+            <Calendar date={state.surveyResult.date} className={Styles.calendarWrap} />
+            <h2 data-testid="question">{state.surveyResult.question}</h2>
           </hgroup>
-          <FlipMove className={Styles.answersList}>
-            <li>
-              <img src="" />
-              <span className={Styles.answer}>ReactJS</span>
-              <span className={Styles.percent}>0%</span>
-            </li>
-            <li className={Styles.active}>
-              <img src="" />
-              <span className={Styles.answer}>ReactJS</span>
-              <span className={Styles.percent}>0%</span>
-            </li>
-            <li>
-              <img src="" />
-              <span className={Styles.answer}>ReactJS</span>
-              <span className={Styles.percent}>0%</span>
-            </li>
+          <FlipMove data-testid="answers" className={Styles.answersList}>
+            {state.surveyResult?.answers && state.surveyResult?.answers.map((answer) =>
+              <li data-testid="answer-wrap" className={answer.isCurrentAccountAnswer ? Styles.active : ''} key={answer.answer}>
+                {answer.image && <img data-testid="image" src={answer.image} alt={answer.answer} />}
+                <span data-testid="answer" className={Styles.answer}>{answer.answer}</span>
+                <span data-testid="percent" className={Styles.percent}>{`${(answer.percent).toFixed(2)}%`}</span>
+              </li>)}
           </FlipMove>
           <button>Voltar</button>
           {state.isLoading && <Loading />}
