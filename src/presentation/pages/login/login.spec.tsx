@@ -81,7 +81,7 @@ describe('Login page', () => {
 
   test('Should show spinner on submit', async () => {
     makeSut()
-    simulateValidSubmit()
+    await simulateValidSubmit()
     expect(screen.getByTestId('spinner')).toBeInTheDocument()
   })
 
@@ -89,14 +89,14 @@ describe('Login page', () => {
     const { authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
-    simulateValidSubmit(email, password)
+    await simulateValidSubmit(email, password)
     expect(authenticationSpy.params).toEqual({ email, password })
   })
 
   test('Should call authentication only once', async () => {
     const { authenticationSpy } = makeSut()
-    simulateValidSubmit()
-    simulateValidSubmit()
+    await simulateValidSubmit()
+    await simulateValidSubmit()
     expect(authenticationSpy.callsCount).toBe(1)
   })
 

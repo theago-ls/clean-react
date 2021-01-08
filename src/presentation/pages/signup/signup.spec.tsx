@@ -115,7 +115,7 @@ describe('SignUp', () => {
 
   test('Should show spinner on submit', async () => {
     makeSut()
-    simulateValidSubmit()
+    await simulateValidSubmit()
     expect(screen.getByTestId('spinner')).toBeInTheDocument()
   })
 
@@ -124,14 +124,14 @@ describe('SignUp', () => {
     const name = faker.name.findName()
     const email = faker.internet.email()
     const password = faker.internet.password()
-    simulateValidSubmit(name, email, password)
+    await simulateValidSubmit(name, email, password)
     expect(addAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password })
   })
 
   test('Should call AddAccount only once', async () => {
     const { addAccountSpy } = makeSut()
-    simulateValidSubmit()
-    simulateValidSubmit()
+    await simulateValidSubmit()
+    await simulateValidSubmit()
     expect(addAccountSpy.callsCount).toBe(1)
   })
 
