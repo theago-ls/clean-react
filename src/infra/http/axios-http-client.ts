@@ -24,8 +24,8 @@ export class AxiosHttpClient implements HttpPostClient, HttpGetClient {
 
   private adapt (axiosResponse: AxiosResponse): HttpResponse {
     return {
-      statusCode: axiosResponse.status,
-      body: axiosResponse.data
+      statusCode: axiosResponse?.status,
+      body: axiosResponse?.data
     }
   }
 }
