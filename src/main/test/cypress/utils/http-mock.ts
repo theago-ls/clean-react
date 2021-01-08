@@ -26,9 +26,11 @@ export const mockServerError = (url: string): void => {
   ).as('request')
 }
 
-export const mockForbiddenError = (url: string): void => {
+export const mockForbiddenError = (url: string | RegExp): void => {
   cy.intercept(
-    url,
+    {
+      url
+    },
     (req) => {
       req.reply(403, {
         error: {
