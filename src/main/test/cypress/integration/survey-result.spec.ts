@@ -3,7 +3,7 @@ import * as Http from '../utils/http-mock'
 
 // If api path isn't added, Cypress intercepts requests to load page
 const path = 'http://fordevs.herokuapp.com/api/surveys'
-const mockSuccess = (method: string = 'get'): void => Http.mockOk(path, 'survey-result', method)
+const mockSuccess = (method: string = 'get'): void => Http.mockOk(path, 'load-survey-result', method)
 const mockUnexpectedError = (method: string = 'get'): void => Http.mockServerError(path, method)
 const mockAccessDeniedError = (): void => Http.mockForbiddenError(path)
 
@@ -72,6 +72,8 @@ describe('SurveyResult', () => {
       cy.visit('/surveys/any_id')
     })
 
+    const mockSaveSuccess = (method: string = 'put'): void => Http.mockOk(path, 'save-survey-result', method)
+
     it('should present error on UnexpectedError', () => {
       mockUnexpectedError('put')
       cy.get('li:nth-child(2)').click()
@@ -82,6 +84,27 @@ describe('SurveyResult', () => {
       mockAccessDeniedError()
       cy.get('li:nth-child(2)').click()
       testUrl('/login')
+    })
+
+    it('should present survey result', () => {
+      mockSaveSuccess()
+      cy.get('li:nth-child(2)').click()
+      cy.getByTestId('question').should('have.text', 'Other Question')
+      cy.getByTestId('day').should('have.text', '15')
+      cy.getByTestId('month').should('have.text', '05')
+      cy.getByTestId('year').should('have.text', '2019')
+
+      cy.get('li:nth-child(1)').then(li => {
+        assert.equal(li.find('[data-testid="answer"]').text(), 'a_crazy_answer')
+        assert.equal(li.find('[data-testid="percent"]').text(), '50.00%')
+        assert.equal(li.find('[data-testid="image"]').attr('src'), 'image_all_the_people')
+      })
+
+      cy.get('li:nth-child(2)').then(li => {
+        assert.equal(li.find('[data-testid="answer"]').text(), 'another_crazy_answer')
+        assert.equal(li.find('[data-testid="percent"]').text(), '50.00%')
+        assert.notExists(li.find('[data-testid="image"]'))
+      })
     })
   })
 })

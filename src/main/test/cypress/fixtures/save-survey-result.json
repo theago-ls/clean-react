@@ -1,0 +1,17 @@
+{
+  "question": "Other Question",
+  "date": "2019-05-15T00:00:00",
+  "answers": [{
+    "image": "image_all_the_people",
+    "answer": "a_crazy_answer",
+    "count": 2,
+    "percent": 50,
+    "isCurrentAccountAnswer": false
+  },
+  {
+    "answer": "another_crazy_answer",
+    "count": 1,
+    "percent": 50,
+    "isCurrentAccountAnswer": true
+  }]
+}
