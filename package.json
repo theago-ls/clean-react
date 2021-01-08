@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index",
     "dev:base": "webpack-dev-server --config webpack.dev.js",
-    "dev": "dev:base --open",
+    "dev": "yarn dev:base --open",
     "build": "webpack --config webpack.prod.js",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "yarn test --watch",
@@ -70,6 +70,7 @@
     "global": "^4.4.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-flip-move": "^3.0.4",
     "react-router-dom": "^5.2.0",
     "validate.js": "^0.13.1"
   }
