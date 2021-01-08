@@ -1,40 +1,34 @@
+import { render, screen } from '@testing-library/react'
 import React from 'react'
-import { AccessDeniedError, UnexpectedError } from '@/domain/errors'
-import { LoadSurveyListSpy, mockAccountModel } from '@/domain/test'
-import { SurveyList } from '@/presentation/pages'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { ApiContext } from '@/presentation/contexts'
-import { createMemoryHistory, MemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
-import { AccountModel } from '@/domain/models'
+import { createMemoryHistory } from 'history'
+import { SurveyResult } from '@/presentation/pages'
+import { ApiContext } from '@/presentation/contexts'
+import { mockAccountModel } from '@/domain/test'
 
 type SutTypes = {
-  loadSurveyListSpy: LoadSurveyListSpy
-  history: MemoryHistory
-  setCurrentAccountMock: (account: AccountModel) => void
+
 }
 
-const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
+const makeSut = (): void => {
   const history = createMemoryHistory({ initialEntries: ['/signup'] })
   const setCurrentAccountMock = jest.fn()
 
   render(
     <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock, getCurrentAccount: () => mockAccountModel() }}>
       <Router history={history}>
-        <SurveyList loadSurveyList={loadSurveyListSpy} />{' '}
+        <SurveyResult />
       </Router>
     </ApiContext.Provider>
   )
-
-  return {
-    loadSurveyListSpy,
-    history,
-    setCurrentAccountMock
-  }
 }
 
-describe('SurveyList Component', () => {
-  test('should present 4 empty item on start', async () => {
-
+describe('SurveyResult Component', () => {
+  test('should present correct initial state', async () => {
+    makeSut()
+    const surveyResult = screen.getByTestId('survey-result')
+    expect(surveyResult.childElementCount).toBe(0)
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument()
   })
 })
