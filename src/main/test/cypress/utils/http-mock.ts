@@ -1,7 +1,9 @@
+import { Method } from 'axios'
 import faker from 'faker'
 
-export const mockUnauthorizedError = (url: string): void => {
+export const mockUnauthorizedError = (url: string, method?: string): void => {
   cy.intercept(
+    method as Method,
     url,
     (req) => {
       req.reply(401, {
@@ -13,8 +15,9 @@ export const mockUnauthorizedError = (url: string): void => {
   ).as('request')
 }
 
-export const mockServerError = (url: string): void => {
+export const mockServerError = (url: string, method?: string): void => {
   cy.intercept(
+    method as Method,
     url,
     (req) => {
       req.reply(faker.helpers.randomize([400, 404, 500]), {
@@ -41,8 +44,9 @@ export const mockForbiddenError = (url: string | RegExp): void => {
   ).as('request')
 }
 
-export const mockOk = (url: string, response: any): void => {
+export const mockOk = (url: string, response: any, method?: string): void => {
   cy.intercept(
+    method as Method,
     url,
     {
       fixture: response,
