@@ -4,6 +4,7 @@ import FlipMove from 'react-flip-move'
 import Styles from './survey-result-styles.scss'
 import { LoadSurveyResult } from '@/domain/usecases'
 import { useErrorHandler } from '@/presentation/hooks'
+import { useHistory } from 'react-router-dom'
 
 type Props = {
   loadSurveyResult: LoadSurveyResult
@@ -17,8 +18,10 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
     reload: false
   })
 
+  const { goBack } = useHistory()
+
   const handleError = useErrorHandler((error: Error) => {
-    setState(prevState => ({ isLoading: false, reload: false, surveyResult: null, error: error.message }))
+    setState({ isLoading: false, reload: false, surveyResult: null, error: error.message })
   })
 
   const handleReload = (): void => {
@@ -46,7 +49,7 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult }: Props) => {
                 <span data-testid="percent" className={Styles.percent}>{`${(answer.percent).toFixed(2)}%`}</span>
               </li>)}
           </FlipMove>
-          <button>Voltar</button>
+          <button data-testid='back-button' onClick={goBack}>Voltar</button>
         </>}
         {state.isLoading && <Loading />}
         {state.error && <Error error={state.error} reload={handleReload} />}
