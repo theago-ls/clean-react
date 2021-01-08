@@ -1,4 +1,5 @@
 @import "../../../../styles/colors.scss";
+@import "../../../../styles/animations.scss";
 
 .surveyItemEmpty {
   display: flex;
@@ -41,18 +42,12 @@
       rgba($white, 0.2),
       transparent
     );
-    animation: shimer 1.2s infinite;
+    animation: shimmer 1.2s infinite;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .surveyItemWrap {
     flex-basis: 100%;
-  }
-}
-
-@keyframes shimer {
-  100% {
-    transform: translateX(100%);
   }
 }
