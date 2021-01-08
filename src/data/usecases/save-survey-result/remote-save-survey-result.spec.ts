@@ -1,4 +1,4 @@
-import { AccessDeniedError } from './../../../domain/errors/access-denied-error'
+import { AccessDeniedError, UnexpectedError } from '@/domain/errors'
 import { mockSaveSurveyResultParams } from '@/domain/test'
 import { HttpClientSpy, mockRemoteSurveyResultModel } from '@/data/test'
 import { RemoteSaveSurveyResult } from '@/data/usecases'
@@ -42,5 +42,14 @@ describe('RemoteSaveSurveyResult', () => {
     }
     const promise = sut.save(mockSaveSurveyResultParams())
     await expect(promise).rejects.toThrow(new AccessDeniedError())
+  })
+
+  test('should throw UnexpectedError if HttpClient returns 404', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.notFound
+    }
+    const promise = sut.save(mockSaveSurveyResultParams())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
