@@ -28,7 +28,7 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult, saveSurveyResult }: P
 
   const handleAnswer = (answer: string): void => {
     setState(prevState => ({ ...prevState, isLoading: true }))
-    saveSurveyResult.save({ answer }).then(surveyResult => setState(prevState => ({ ...prevState, surveyResult }))).catch(handleError)
+    saveSurveyResult.save({ answer }).then(surveyResult => setState(prevState => ({ ...prevState, isLoading: false, surveyResult }))).catch(handleError)
   }
 
   useEffect(() => {
