@@ -77,5 +77,11 @@ describe('SurveyResult', () => {
       cy.get('li:nth-child(2)').click()
       cy.getByTestId('error').should('contain.text', 'Algo de errado aconteceu. Tente novamente mais tarde')
     })
+
+    it('should redirect to Login on AccessDeniedError', () => {
+      mockAccessDeniedError()
+      cy.get('li:nth-child(2)').click()
+      testUrl('/login')
+    })
   })
 })
