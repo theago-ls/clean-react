@@ -2,7 +2,7 @@ import { LoadSurveyResult } from '@/domain/usecases'
 import { Error, Footer, Header, Loading } from '@/presentation/components'
 import { useErrorHandler } from '@/presentation/hooks'
 import React, { useEffect, useState } from 'react'
-import Result from './components/result/result'
+import { Result } from '@/presentation/pages/survey-result/components'
 import Styles from './survey-result-styles.scss'
 
 type Props = {
