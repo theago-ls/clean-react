@@ -3,14 +3,10 @@ import Styles from './error-styles.scss'
 
 type Props = {
   error: string
-  setState: CallableFunction
+  reload: () => void
 }
 
-const Error: React.FC<Props> = ({ error, setState }: Props) => {
-  const reload = (): void => {
-    setState(prevState => ({ surveys: [], error: '', reload: !prevState.reload }))
-  }
-
+const Error: React.FC<Props> = ({ error, reload }: Props) => {
   return (
     <div data-testid="error" className={Styles.errorWrap}>
       <span>{error}</span>
