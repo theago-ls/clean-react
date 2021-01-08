@@ -14,7 +14,6 @@ export class AuthorizeHttpClientDecorator implements HttpClient {
     if (account?.accessToken) {
       data = {
         ...data,
-        method: 'get',
         headers: {
           ...data.headers,
           'x-access-token': account.accessToken
