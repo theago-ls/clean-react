@@ -145,7 +145,7 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('survey-result'))
   })
 
-  test('should render error on UnexpectedError if SaveSurveyResult fails', async () => {
+  test('should render error on UnexpectedError - SaveSurveyResult', async () => {
     const saveSurveyResultSpy = new SaveSurveyResultSpy()
     const error = new UnexpectedError()
     jest.spyOn(saveSurveyResultSpy, 'save').mockRejectedValueOnce(error)
@@ -157,5 +157,18 @@ describe('SurveyResult Component', () => {
     expect(screen.queryByTestId('question')).not.toBeInTheDocument()
     expect(screen.getByTestId('error')).toHaveTextContent(error.message)
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument()
+  })
+
+  test('should logout on AccessDeniedError - SaveSurveyResult', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy()
+    const error = new AccessDeniedError()
+    jest.spyOn(saveSurveyResultSpy, 'save').mockRejectedValueOnce(error)
+    const { setCurrentAccountMock, history } = makeSut({ saveSurveyResultSpy })
+    await waitFor(() => screen.getByTestId('survey-result'))
+    const answersWrap = screen.queryAllByTestId('answer-wrap')
+    fireEvent.click(answersWrap[1])
+    await waitFor(() => screen.getByTestId('survey-result'))
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined)
+    expect(history.location.pathname).toBe('/login')
   })
 })
