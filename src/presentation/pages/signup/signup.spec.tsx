@@ -1,19 +1,16 @@
+import { InvalidCredentialsError } from '@/domain/errors'
+import { AddAccountSpy, mockAccountModel } from '@/domain/test'
+import { AddAccount } from '@/domain/usecases'
+import { currentAccountState } from '@/presentation/components'
+import { populateField, ValidationStub } from '@/presentation/test'
+import '@testing-library/jest-dom/extend-expect'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import faker from 'faker'
+import { createMemoryHistory } from 'history'
 import React from 'react'
 import { Router } from 'react-router-dom'
-
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { createMemoryHistory } from 'history'
-import '@testing-library/jest-dom/extend-expect'
 import { RecoilRoot } from 'recoil'
-
 import Signup from './signup'
-import { populateField, ValidationStub } from '@/presentation/test'
-import { InvalidCredentialsError } from '@/domain/errors'
-import { ApiContext } from '@/presentation/contexts'
-
-import faker from 'faker'
-import { AddAccount } from '@/domain/usecases'
-import { AddAccountSpy } from '@/domain/test'
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy
@@ -31,17 +28,18 @@ const makeSut = (params?: SutParams): SutTypes => {
   validationStub.errorMessage = params?.validationError
   const addAccountSpy = new AddAccountSpy()
   const setCurrentAccountMock = jest.fn()
+
+  const mockedState = { setCurrentAccount: setCurrentAccountMock, getCurrentAccount: () => mockAccountModel() }
+
   render(
-    <RecoilRoot>
-      <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-        <Router history={history}>
-          <Signup
-            validation={validationStub}
-            addAccount={addAccountSpy}
-          />
-        </Router>
-      </ApiContext.Provider>
-    </RecoilRoot>
+    <RecoilRoot initializeState={({ set }) => set(currentAccountState, mockedState)}>
+      <Router history={history}>
+        <Signup
+          validation={validationStub}
+          addAccount={addAccountSpy}
+        />
+      </Router>
+    </RecoilRoot >
   )
   return {
     addAccountSpy,
