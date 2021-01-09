@@ -5,7 +5,7 @@
 
 # **4Dev React - Enquetes para Programadores**
 
-[![alt text](./public/course-logo.png "Link para o treinamento")](https://www.udemy.com/course/react-com-mango/?referralCode=552F88858EAE76346C8B)
+[Link para o treinamento](https://www.udemy.com/course/react-com-mango/?referralCode=552F88858EAE76346C8B)
 
 ---
 
