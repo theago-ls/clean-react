@@ -1,5 +1,9 @@
-export const testInputStatus = (field: string, error: string): void => {
-  cy.getByTestId(field).should('have.attr', 'title', error)
+export const testInputStatus = (field: string, error?: string): void => {
+  if (error) {
+    cy.getByTestId(field).should('have.attr', 'title', error)
+  } else {
+    cy.getByTestId(field).should('not.have.attr', 'title')
+  }
 }
 
 export const typeInput = (field: string, input: string): void => {
