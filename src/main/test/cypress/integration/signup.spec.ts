@@ -5,8 +5,8 @@ import faker from 'faker'
 
 const path = '/signup'
 const mockEmailInUseError = (): void => Http.mockForbiddenError(path)
-const mockUnexpectedError = (): void => Http.mockServerError(path)
-const mockSuccess = (): void => Http.mockOk(path, 'account')
+const mockUnexpectedError = (): void => Http.mockServerError(path, 'post')
+const mockSuccess = (): void => Http.mockOk(path, 'account', 'post')
 
 const simulateValidSubmit = (): void => {
   typeInput('name', faker.random.alphaNumeric(5))

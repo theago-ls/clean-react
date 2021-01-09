@@ -2,9 +2,9 @@ import { setLocalStorageItem, getLocalStorageItem, testUrl } from '../utils/help
 import * as Http from '../utils/http-mock'
 
 const path = '/surveys'
-const mockUnexpectedError = (): void => Http.mockServerError(path)
+const mockUnexpectedError = (): void => Http.mockServerError(path, 'get')
 const mockAccessDeniedError = (): void => Http.mockForbiddenError(path)
-const mockSuccess = (): void => Http.mockOk(path, 'survey-list')
+const mockSuccess = (): void => Http.mockOk(path, 'survey-list', 'get')
 
 describe('SurveyList', () => {
   beforeEach(() => {
