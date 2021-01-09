@@ -4,6 +4,7 @@ import { Router } from 'react-router-dom'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import '@testing-library/jest-dom/extend-expect'
+import { RecoilRoot } from 'recoil'
 
 import Signup from './signup'
 import { populateField, ValidationStub } from '@/presentation/test'
@@ -31,14 +32,16 @@ const makeSut = (params?: SutParams): SutTypes => {
   const addAccountSpy = new AddAccountSpy()
   const setCurrentAccountMock = jest.fn()
   render(
-    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-      <Router history={history}>
-        <Signup
-          validation={validationStub}
-          addAccount={addAccountSpy}
-        />
-      </Router>
-    </ApiContext.Provider>
+    <RecoilRoot>
+      <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
+        <Router history={history}>
+          <Signup
+            validation={validationStub}
+            addAccount={addAccountSpy}
+          />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>
   )
   return {
     addAccountSpy,

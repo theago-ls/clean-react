@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react'
-
+import React, { useEffect, useContext } from 'react'
+import { loginState, Input, SubmitButton, FormStatus } from './components'
 import { ApiContext } from '@/presentation/contexts'
 import { Authentication } from '@/domain/usecases'
-import { Footer, LoginHeader, FormStatus, Input, SubmitButton } from '@/presentation/components'
+import { Footer, LoginHeader } from '@/presentation/components'
+
 import { Validation } from '@/presentation/protocols/validation/validation'
 import { Link, useHistory } from 'react-router-dom'
 import Styles from './login-styles.scss'
+import { useRecoilState } from 'recoil'
 
 type Props = {
   validation: Validation
@@ -15,25 +17,9 @@ type Props = {
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const { setCurrentAccount } = useContext(ApiContext)
 
-  const [state, setState] = useState({
-    isLoading: false,
-    isFormInvalid: true,
-    errorMessage: '',
-    email: '',
-    password: '',
-    emailError: 'Campo obrigatório',
-    passwordError: 'Campo obrigatório',
-    mainError: ''
-  })
+  const [state, setState] = useRecoilState(loginState)
 
   const history = useHistory()
-
-  const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
-    setState(prevState => ({
-      ...prevState,
-      [event.target.name]: event.target.value
-    }))
-  }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
@@ -72,11 +58,11 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       <LoginHeader />
       <form data-testid="form" className={Styles.form} onSubmit={handleSubmit}>
         <h2>Login</h2>
-        <Input type="email" name="email" placeholder="Digite seu e-mail" state={state} setState={setState} onChange={handleChange}/>
-        <Input type="password" name="password" placeholder="Digite sua senha" state={state} setState={setState} />
-        <SubmitButton state={state} text="Entrar"/>
+        <Input type="email" name="email" placeholder="Digite seu e-mail" />
+        <Input type="password" name="password" placeholder="Digite sua senha" />
+        <SubmitButton text="Entrar" />
         <Link data-testid="signup-link" replace to="/signup" className={Styles.link}>Criar conta</Link>
-        <FormStatus state={state} />
+        <FormStatus />
       </form>
       <Footer />
     </div>
