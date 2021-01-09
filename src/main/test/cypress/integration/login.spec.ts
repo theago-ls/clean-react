@@ -4,9 +4,9 @@ import { testUrl, testLocalStorageItem } from '../utils/helpers'
 import * as Http from '../utils/http-mock'
 
 const path = '/login'
-const mockInvalidCredentialsError = (): void => Http.mockUnauthorizedError(path)
-const mockUnexpectedError = (): void => Http.mockServerError(path)
-const mockSuccess = (): void => Http.mockOk(path, 'account')
+const mockInvalidCredentialsError = (): void => Http.mockUnauthorizedError(path, 'post')
+const mockUnexpectedError = (): void => Http.mockServerError(path, 'post')
+const mockSuccess = (): void => Http.mockOk(path, 'account', 'post')
 
 const simulateValidSubmit = (): void => {
   typeInput('email', faker.internet.email())
