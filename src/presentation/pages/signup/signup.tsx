@@ -3,7 +3,7 @@ import { currentAccountState, Footer, LoginHeader } from '@/presentation/compone
 import { Validation } from '@/presentation/protocols'
 import React, { useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil'
 import { FormStatus, Input, signUpState, SubmitButton } from './components'
 import Styles from './signup-styles.scss'
 
@@ -13,6 +13,8 @@ type Props = {
 }
 
 const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
+  const resetSignUpState = useResetRecoilState(signUpState)
+
   const { setCurrentAccount } = useRecoilValue(currentAccountState)
   const [state, setState] = useRecoilState(signUpState)
 
@@ -37,6 +39,8 @@ const Signup: React.FC<Props> = ({ validation, addAccount }: Props) => {
       setState(prevState => ({ ...prevState, isLoading: false, mainError: error.message }))
     }
   }
+
+  useEffect(() => resetSignUpState(), [])
 
   useEffect(() => {
     const { name, email, password, passwordConfirmation } = state
