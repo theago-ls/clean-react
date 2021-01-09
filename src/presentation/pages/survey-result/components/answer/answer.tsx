@@ -1,13 +1,16 @@
 import React from 'react'
 import { SurveyResultAnswerModel } from '@/domain/models'
 import Styles from './answer-styles.scss'
+import { useRecoilValue } from 'recoil'
+import { onSurveyAnswerState } from '../atoms/atoms'
 
 type Props = {
   answer: SurveyResultAnswerModel
-  onAnswer: (answer: string) => void
 }
 
-const Answer: React.FC<Props> = ({ answer, onAnswer }: Props) => {
+const Answer: React.FC<Props> = ({ answer }: Props) => {
+  const { onAnswer } = useRecoilValue(onSurveyAnswerState)
+
   const handleClick = (e: React.MouseEvent): void => {
     e.preventDefault()
     if (e.currentTarget.classList.contains(Styles.active)) {

@@ -7,10 +7,9 @@ import Styles from './result-styles.scss'
 
 type Props = {
   result: LoadSurveyResult.Model
-  onAnswer: (answer: string) => void
 }
 
-const Result: React.FC<Props> = ({ result, onAnswer }: Props) => {
+const Result: React.FC<Props> = ({ result }: Props) => {
   const { goBack } = useHistory()
 
   return (
@@ -21,7 +20,7 @@ const Result: React.FC<Props> = ({ result, onAnswer }: Props) => {
         <h2 data-testid="question">{result.question}</h2>
       </hgroup>
       <ul data-testid="answers" className={Styles.answersList}>
-        {result.answers?.map((answer) => <Answer key={answer.answer} answer={answer} onAnswer={onAnswer} />)}
+        {result.answers?.map((answer) => <Answer key={answer.answer} answer={answer} />)}
       </ul>
       <button className={Styles.button} data-testid='back-button' onClick={goBack}>Voltar</button>
 
